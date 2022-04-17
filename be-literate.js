@@ -26,8 +26,9 @@ export class BeLiterateController {
             console.log(e);
             console.log(fileReader.error);
         };
+        const verb = this.proxy.readVerb;
         for (const file of files) {
-            fileReader.readAsText(file);
+            fileReader[verb](file);
         }
     };
     finale(proxy, target, beDecorProps) {
@@ -46,6 +47,9 @@ define({
             upgrade,
             virtualProps: ['fileContents'],
             intro: 'intro',
+            proxyPropDefaults: {
+                readVerb: 'readAsText'
+            }
         },
         actions: {}
     },

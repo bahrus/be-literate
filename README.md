@@ -1,4 +1,4 @@
-# be-literate [TODO]
+# be-literate
 
 Declaratively read contents from a local file.
 
@@ -10,6 +10,6 @@ Syntax:
 <input type=file be-literate>
 ```
 
-It causes the input element to emit event literate::file-contents-changed.
+It causes the input element to emit event literate::file-contents-changed, and the contents are provided in the custom event's detail.value property.
 
-Can also notify neighboring elements (including host) via [be-noticed](https://github.com/bahrus/be-noticed) syntax.
+The file contents can be read via path: inputEl.beDecorated.literate.fileContents.

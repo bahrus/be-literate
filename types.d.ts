@@ -2,6 +2,7 @@ import {BeDecoratedProps} from 'be-decorated/be-decorated.js';
 
 export interface BeLiterateVirtualProps{
     fileContents: any[];
+    readVerb: 'readAsText' | 'readAsDataURL' | 'readAsArrayBuffer' | 'readAsBinaryString';
 }
 
 export interface BeLiterateProps extends BeLiterateVirtualProps{

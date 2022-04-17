@@ -27,8 +27,9 @@ export class BeLiterateController implements BeLiterateActions{
             console.log(e);
             console.log(fileReader.error);
         }
+        const verb = this.proxy.readVerb;
         for(const file of files){
-            fileReader.readAsText(file);
+            fileReader[verb](file);
         }
     }
     finale(proxy: HTMLInputElement & BeLiterateVirtualProps, target: HTMLInputElement, beDecorProps: BeDecoratedProps){
@@ -51,6 +52,9 @@ define<BeLiterateProps & BeDecoratedProps<BeLiterateProps, BeLiterateActions>, B
             upgrade,
             virtualProps: ['fileContents'],
             intro: 'intro',
+            proxyPropDefaults:{
+                readVerb: 'readAsText'
+            }
         },
         
         actions:{
