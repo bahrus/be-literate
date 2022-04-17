@@ -27,10 +27,14 @@ export class BeLiterateController implements BeLiterateActions{
             console.log(e);
             console.log(fileReader.error);
         }
+        for(const file of files){
+            fileReader.readAsText(file);
+        }
     }
     finale(proxy: HTMLInputElement & BeLiterateVirtualProps, target: HTMLInputElement, beDecorProps: BeDecoratedProps){
         target.removeEventListener('change', this.handleInputChange);
     }
+    emitEvents = ['fileContents'];
 }
 
 export interface BeLiterateController extends BeLiterateProps{}
@@ -43,10 +47,12 @@ define<BeLiterateProps & BeDecoratedProps<BeLiterateProps, BeLiterateActions>, B
     config:{
         tagName,
         propDefaults:{
+            ifWantsToBe,
+            upgrade,
             virtualProps: ['fileContents'],
             intro: 'intro',
-            emitEvents: ['fileContents']
         },
+        
         actions:{
 
         }

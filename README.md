@@ -10,6 +10,6 @@ Syntax:
 <input type=file be-literate>
 ```
 
-It causes the input element to emit event be-literate::file-contents-changed.
+It causes the input element to emit event literate::file-contents-changed.
 
 Can also notify neighboring elements (including host) via [be-noticed](https://github.com/bahrus/be-noticed) syntax.

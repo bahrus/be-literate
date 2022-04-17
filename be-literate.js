@@ -26,10 +26,14 @@ export class BeLiterateController {
             console.log(e);
             console.log(fileReader.error);
         };
+        for (const file of files) {
+            fileReader.readAsText(file);
+        }
     };
     finale(proxy, target, beDecorProps) {
         target.removeEventListener('change', this.handleInputChange);
     }
+    emitEvents = ['fileContents'];
 }
 const tagName = 'be-literate';
 const ifWantsToBe = 'literate';
@@ -38,9 +42,10 @@ define({
     config: {
         tagName,
         propDefaults: {
+            ifWantsToBe,
+            upgrade,
             virtualProps: ['fileContents'],
             intro: 'intro',
-            emitEvents: ['fileContents']
         },
         actions: {}
     },
