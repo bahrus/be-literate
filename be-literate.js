@@ -49,7 +49,8 @@ define({
             intro: 'intro',
             proxyPropDefaults: {
                 readVerb: 'readAsText'
-            }
+            },
+            primaryProp: 'readVerb'
         },
         actions: {}
     },

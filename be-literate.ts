@@ -54,7 +54,8 @@ define<BeLiterateProps & BeDecoratedProps<BeLiterateProps, BeLiterateActions>, B
             intro: 'intro',
             proxyPropDefaults:{
                 readVerb: 'readAsText'
-            }
+            },
+            primaryProp: 'readVerb'
         },
         
         actions:{

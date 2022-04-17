@@ -13,3 +13,13 @@ Syntax:
 It causes the input element to emit event literate::file-contents-changed, and the contents are provided in the custom event's detail.value property.
 
 The file contents can be read via path: inputEl.beDecorated.literate.fileContents.
+
+## Specifying Read Option
+
+To specify which of the file read options to apply to the file(s), set the attribute:
+
+```html
+<input type=file be-literate=readAsDataURL>
+```
+
+If not specified, as above, the default is readAsText.
