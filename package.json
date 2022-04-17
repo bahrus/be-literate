@@ -1,6 +1,17 @@
 {
   "name": "be-literate",
   "version": "0.0.0",
+  "keywords": [
+    "web-components",
+    "web-component",
+    "custom-element",
+    "custom-elements",
+    "decorate",
+    "behavior",
+    "directive",
+    "readFile",
+    "fileReader"
+  ],
   "description": "",
   "main": "index.js",
   "scripts": {
