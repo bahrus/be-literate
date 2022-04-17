@@ -9,13 +9,23 @@
     "decorate",
     "behavior",
     "directive",
-    "readFile",
-    "fileReader"
+    "read-file",
+    "file-reader"
   ],
-  "description": "",
-  "main": "index.js",
+  "description": "Enhance the input element so it can declaratively read contents from a local file (or files).",
+  "main": "be-literate.js",
+  "module": "be-literate.js",
+  "exports": {
+    ".": "./be-literate.js",
+    "./be-literate.js": "./be-literate.js"
+  },
+  "files":[
+    "."
+  ],
+  "types": "types.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "package-check": "package-check",
     "serve": "node node_modules/xtal-test/serve.js"
   },
   "dependencies": {
@@ -23,13 +33,14 @@
     "be-hive": "0.0.43"
   },
   "devDependencies": {
+    "@skypack/package-check": "0.2.2",
     "xtal-test": "0.0.56"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bahrus/be-literate.git"
   },
-  "author": "",
+  "author": "Bruce Anderson <anderson.bruce.b@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bahrus/be-literate/issues"
