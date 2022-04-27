@@ -26,7 +26,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "package-check": "package-check",
-    "serve": "node node_modules/xtal-test/serve.js"
+    "serve": "node node_modules/may-it-serve/serve.js"
   },
   "dependencies": {
     "be-decorated": "0.0.111",
