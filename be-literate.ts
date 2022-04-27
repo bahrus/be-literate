@@ -35,7 +35,7 @@ export class BeLiterateController implements BeLiterateActions{
     finale(proxy: HTMLInputElement & BeLiterateVirtualProps, target: HTMLInputElement, beDecorProps: BeDecoratedProps){
         target.removeEventListener('change', this.handleInputChange);
     }
-    emitEvents = ['fileContents'];
+    
 }
 
 export interface BeLiterateController extends BeLiterateProps{}
@@ -55,7 +55,8 @@ define<BeLiterateProps & BeDecoratedProps<BeLiterateProps, BeLiterateActions>, B
             proxyPropDefaults:{
                 readVerb: 'readAsText'
             },
-            primaryProp: 'readVerb'
+            primaryProp: 'readVerb',
+            emitEvents: ['fileContents'],
         },
         
         actions:{

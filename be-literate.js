@@ -34,7 +34,6 @@ export class BeLiterateController {
     finale(proxy, target, beDecorProps) {
         target.removeEventListener('change', this.handleInputChange);
     }
-    emitEvents = ['fileContents'];
 }
 const tagName = 'be-literate';
 const ifWantsToBe = 'literate';
@@ -50,7 +49,8 @@ define({
             proxyPropDefaults: {
                 readVerb: 'readAsText'
             },
-            primaryProp: 'readVerb'
+            primaryProp: 'readVerb',
+            emitEvents: ['fileContents'],
         },
         actions: {}
     },
