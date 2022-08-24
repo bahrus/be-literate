@@ -15,7 +15,6 @@ export class BeLiterateController {
         let finishedCount = 0;
         const fileReader = new FileReader();
         fileReader.onload = (e) => {
-            console.log(e);
             fileContents.push(fileReader.result);
             finishedCount++;
             if (finishedCount === files.length) {
@@ -23,8 +22,8 @@ export class BeLiterateController {
             }
         };
         fileReader.onerror = (e) => {
-            console.log(e);
-            console.log(fileReader.error);
+            console.error(e);
+            console.error(fileReader.error);
         };
         const verb = this.proxy.readVerb;
         for (const file of files) {
