@@ -1,10 +1,10 @@
-import {BeDecoratedProps} from 'be-decorated/be-decorated.js';
+import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
 
 export interface BeLiterateEndUserProps{
     readVerb: 'readAsText' | 'readAsDataURL' | 'readAsArrayBuffer' | 'readAsBinaryString';
 }
 
-export interface BeLiterateVirtualProps extends BeLiterateEndUserProps{
+export interface BeLiterateVirtualProps extends BeLiterateEndUserProps, MinimalProxy{
     fileContents: any[];
     
 }

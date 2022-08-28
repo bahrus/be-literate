@@ -2,10 +2,11 @@ import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
 import {BeLiterateActions, BeLiterateProps, BeLiterateVirtualProps} from './types';
 import {register} from 'be-hive/register.js';
 
-export class BeLiterateController implements BeLiterateActions{
+export class BeLiterateController extends EventTarget implements BeLiterateActions{
     
     intro(proxy: HTMLInputElement & BeLiterateVirtualProps, target: HTMLInputElement, beDecorProps: BeDecoratedProps){
         target.addEventListener('change', this.handleInputChange);
+        proxy.resolved = true;
     }
     handleInputChange = (e: Event) => {
         const input = e.target as HTMLInputElement;
