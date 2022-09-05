@@ -1,17 +1,24 @@
 import {define, BeDecoratedProps} from 'be-decorated/be-decorated.js';
-import {BeLiterateActions, BeLiterateProps, BeLiterateVirtualProps} from './types';
+import {Actions, Proxy} from './types';
 import {register} from 'be-hive/register.js';
 
-export class BeLiterateController extends EventTarget implements BeLiterateActions{
+export class BeLiterateController extends EventTarget implements Actions{
     
-    intro(proxy: HTMLInputElement & BeLiterateVirtualProps, target: HTMLInputElement, beDecorProps: BeDecoratedProps){
-        target.addEventListener('change', this.handleInputChange);
-        proxy.resolved = true;
+    #abortController: AbortController | undefined;
+    intro(proxy: Proxy, target: HTMLInputElement, beDecorProps: BeDecoratedProps){
+        this.disconnect();
+        this.#abortController = new AbortController();
+        target.addEventListener('change', e => {
+            this.readFile(proxy);
+        }, {
+            signal: this.#abortController.signal,
+        });
+        this.readFile(proxy);
     }
-    handleInputChange = (e: Event) => {
-        const input = e.target as HTMLInputElement;
-        if(!input.checkValidity()) return;
-        const {files} = input;
+    readFile(proxy: Proxy){
+        const {self} = proxy;
+        if(!self.checkValidity()) return;
+        const {files} = self;
         if(files === null) return;
         const fileContents: any[] = [];
         let finishedCount = 0;
@@ -20,31 +27,37 @@ export class BeLiterateController extends EventTarget implements BeLiterateActio
             fileContents.push(fileReader.result);
             finishedCount++;
             if(finishedCount === files.length){
-                this.proxy.fileContents = fileContents;
+                proxy.fileContents = fileContents;
             }
         }
         fileReader.onerror = (e: Event) => {
             console.error(e);
             console.error(fileReader.error);
         }
-        const verb = this.proxy.readVerb;
+        const verb = proxy.readVerb;
         for(const file of files){
             fileReader[verb](file);
         }
+        proxy.resolved = true;
     }
-    finale(proxy: HTMLInputElement & BeLiterateVirtualProps, target: HTMLInputElement, beDecorProps: BeDecoratedProps){
-        target.removeEventListener('change', this.handleInputChange);
+    handleInputChange = (e: Event) => {
+
+    }
+    disconnect(){
+        if(this.#abortController !== undefined) this.#abortController.abort();
+    }
+    finale(){
+        this.disconnect();
     }
     
 }
 
-export interface BeLiterateController extends BeLiterateProps{}
 
 const tagName = 'be-literate';
 const ifWantsToBe = 'literate';
 const upgrade = 'input[type="file"]';
 
-define<BeLiterateProps & BeDecoratedProps<BeLiterateProps, BeLiterateActions>, BeLiterateActions>({
+define<Proxy & BeDecoratedProps<Proxy, Actions>, Actions>({
     config:{
         tagName,
         propDefaults:{
@@ -58,10 +71,6 @@ define<BeLiterateProps & BeDecoratedProps<BeLiterateProps, BeLiterateActions>, B
             primaryProp: 'readVerb',
             emitEvents: ['fileContents'],
         },
-        
-        actions:{
-
-        }
     },
     complexPropDefaults:{
         controller: BeLiterateController

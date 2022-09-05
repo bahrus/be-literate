@@ -1,19 +1,23 @@
 import {BeDecoratedProps, MinimalProxy} from 'be-decorated/types';
 
-export interface BeLiterateEndUserProps{
+export interface EndUserProps{
     readVerb: 'readAsText' | 'readAsDataURL' | 'readAsArrayBuffer' | 'readAsBinaryString';
 }
 
-export interface BeLiterateVirtualProps extends BeLiterateEndUserProps, MinimalProxy{
+export interface VirtualProps extends EndUserProps, MinimalProxy<HTMLInputElement>{
     fileContents: any[];
-    
 }
 
-export interface BeLiterateProps extends BeLiterateVirtualProps{
-    proxy: HTMLInputElement & BeLiterateVirtualProps;
+export type Proxy = HTMLInputElement & VirtualProps;
+
+export interface ProxyProps extends VirtualProps{
+    proxy: Proxy;
 }
 
-export interface BeLiterateActions {
-    intro(proxy: HTMLInputElement & BeLiterateVirtualProps, target: HTMLInputElement, beDecorProps: BeDecoratedProps): void;
-    finale(proxy: HTMLInputElement & BeLiterateVirtualProps, target: HTMLInputElement, beDecorProps: BeDecoratedProps): void;
+export type PP = ProxyProps;
+
+
+export interface Actions {
+    intro(proxy: Proxy, target: HTMLInputElement, beDecorProps: BeDecoratedProps): void;
+    finale(proxy: Proxy, target: HTMLInputElement, beDecorProps: BeDecoratedProps): void;
 }
