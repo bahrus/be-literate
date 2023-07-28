@@ -27,3 +27,29 @@ To specify which of the file read options to apply to the file(s), set the attri
 ```
 
 If not specified, as above, the default is readAsText.
+
+## Running locally
+
+Any web server than can serve static files will do, but...
+
+1.  Install git.
+2.  Do a git clone or a git fork of repository https://github.com/bahrus/be-literate
+3.  Install node.js
+4.  Open command window to folder where you cloned this repo.
+5.  > npm install
+6.  > npm run serve
+7.  Open http://localhost:3030/demo/dev in a modern browser.
+
+## Using from ESM Module:
+
+```JavaScript
+import 'be-literate/be-literate.js';
+```
+
+## Using from CDN:
+
+```html
+<script type=module crossorigin=anonymous>
+    import 'https://esm.run/be-literate';
+</script>
+```
