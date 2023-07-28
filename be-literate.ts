@@ -47,6 +47,15 @@ export class BeLiterate extends BE<AP, Actions, HTMLInputElement> implements Act
         }
         self.resolved = true;
     }
+
+    #disconnect(){
+        if(this.#abortController !== undefined) this.#abortController.abort();
+    }
+
+    override detach(detachedElement: HTMLInputElement) {
+        super.detach(detachedElement);
+        this.#disconnect();
+    }
 }
 
 export interface BeLiterate extends AllProps{}
@@ -59,10 +68,17 @@ const xe = new XE<AP, Actions>({
     config:{
         tagName,
         propDefaults:{
-            ...propDefaults
+            ...propDefaults,
+            readVerb: 'readAsText',
         },
         propInfo:{
-            ...propInfo
+            ...propInfo,
+            fileContents:{
+                notify:{
+                    dispatch: true,
+                    dispatchFromEnhancedElement: true,
+                }
+            }
         },
         actions:{}
     },
