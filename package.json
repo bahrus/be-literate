@@ -20,21 +20,25 @@
     "./be-literate.js": "./be-literate.js"
   },
   "files": [
-    "."
+    "*.js",
+    "types.d.ts"
   ],
   "types": "types.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "package-check": "package-check",
-    "serve": "node node_modules/may-it-serve/serve.js"
+    "serve": "node node_modules/may-it-serve/serve.js",
+    "test": "playwright test",
+    "safari": "npx playwright wk http://localhost:3030",
+    "update": "ncu -u && npm install"
   },
   "dependencies": {
-    "be-decorated": "0.0.153",
-    "be-hive": "0.0.63"
+    "be-enhanced": "0.0.36",
+    "be-hive": "0.0.115",
+    "trans-render": "0.0.699",
+    "xtal-element": "0.0.574"
   },
   "devDependencies": {
-    "@skypack/package-check": "0.2.2",
-    "may-it-serve": "0.0.2"
+    "@playwright/test": "1.36.1",
+    "may-it-serve": "0.0.5"
   },
   "repository": {
     "type": "git",
