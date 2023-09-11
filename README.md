@@ -16,7 +16,7 @@ Syntax:
 
 It causes the input element to emit event "enh-by-be-literate.file-contents-changed", and the contents are provided in the custom event's detail.value property.
 
-The file contents can be read via path: inputEl.beDecorated.literate.fileContents.
+The file contents can be read via path: inputEl.beEnhanced.beLiterate.fileContents.
 
 ## Specifying Read Option
 
