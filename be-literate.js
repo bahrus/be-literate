@@ -22,12 +22,20 @@ class FileManager {
      */
     #errorAbortController;
 
+    /** @type {FileList} */
+    #files;
+
     /**
      * @type {Array<any>}
      */
     #fileContents = [];
 
-    #totalFileCountRead = 0;
+    /**
+     * @type {AP & BEAllProps}
+     */
+    #self;
+
+    //#totalFileCountRead = 0;
 
     /**
      * 
@@ -36,8 +44,10 @@ class FileManager {
      */
     constructor(self){
         const {enhancedElement, readVerb} = self;
+        this.#self = self;
         const {files} = enhancedElement;
         if(files === null) return;
+        this.#files = files;
         const fr = new FileReader();
         this.#fileReader = fr;
         this.#loadAbortController = new AbortController();
@@ -52,9 +62,16 @@ class FileManager {
      * @param {ProgressEvent} e 
      */
     handleEvent(e){
-        console.log({e});
+        //console.log({e});
+        const fr = /** @type {FileReader} */ (e.target);
         switch(e.type){
             case 'load':
+                this.#fileContents.push(fr.result);
+                if(this.#fileContents.length === this.#files.length){
+                    const {enhancedElement} = this.#self;
+                    const le = new LoadEvent(this.#fileContents);
+                    enhancedElement.dispatchEvent(le);
+                }
                 break;
             case 'error':
                 break;
