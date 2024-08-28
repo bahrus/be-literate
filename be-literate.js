@@ -15,8 +15,16 @@ class BeLiterate extends BE {
      * @type {AbortController | undefined}
      */
     #abortController
-    handleEvent(object) {
-        throw new Error('Method not implemented.');
+    /**
+     * 
+     * @param {Event} e 
+     */
+    handleEvent(e) {
+        const self = 
+        /** @type {AP & BEAllProps} */
+        /** @type {any} */
+        (this);
+        this.#readFile(self);
     }
     /**
      * @type {BEConfig<AP & BEAllProps, Actions & IEnhancement, any>}
