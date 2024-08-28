@@ -69,6 +69,25 @@ class FileManager {
  */
 class BeLiterate extends BE {
     /**
+     * @type {BEConfig<AP & BEAllProps, Actions & IEnhancement, any>}
+     */
+    static config = {
+        propDefaults: {
+            readVerb: 'readAsText',
+        },
+        propInfo: {
+            ...propInfo,
+        },
+        compacts: {
+            //when_itemCE_changes_invoke_attachProp: 0
+        },
+        actions: {},
+        positractions: [
+            resolved, rejected,
+        ]
+    };
+
+    /**
      * @type {AbortController | undefined}
      */
     #abortController
@@ -83,12 +102,7 @@ class BeLiterate extends BE {
         (this);
         this.#readFile(self);
     }
-    /**
-     * @type {BEConfig<AP & BEAllProps, Actions & IEnhancement, any>}
-     */
-    static config = {
 
-    }
 
     /**
      * 
@@ -100,6 +114,7 @@ class BeLiterate extends BE {
         await super.attach(enhancedElement, enhancementInfo);
         this.#abortController = new AbortController()
         enhancedElement.addEventListener('change', this, {signal: this.#abortController.signal});
+        this.resolved = true;
     }
 
     /**
