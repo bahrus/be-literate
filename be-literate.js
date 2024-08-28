@@ -19,3 +19,20 @@ class BeLiterate extends BE {
 
 await BeLiterate.bootUp();
 export { BeLiterate }
+
+export class LoadEvent extends Event{
+
+    static EventName = 'load';
+    /**
+     * @type {Array<any>}
+     */
+    fileContents;
+    constructor(
+        fileContents, 
+
+        ){
+        
+        super(LoadEvent.EventName);
+        this.fileContents = fileContents;
+    }
+}
