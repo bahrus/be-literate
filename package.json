@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "be-enhanced": "0.0.135",
-    "be-hive": "0.0.204",
+    "be-hive": "0.0.205",
     "trans-render": "0.0.830"
   },
   "devDependencies": {
