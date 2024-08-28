@@ -11,10 +11,13 @@ be-literate turns this [code snippet](https://www.w3docs.com/learn-javascript/fi
 Syntax:
 
 ```html
-<input type=file be-literate>
+<input type=file be-literate onload="
+    const {fileContents} = event;
+    console.log({fileContents});
+">
 ```
 
-It causes the input element to emit event "enh-by-be-literate.file-contents-changed", and the contents are provided in the custom event's detail.value property.
+It causes the input element to emit event "load", and the contents are provided event's fileContents.
 
 The file contents can be read via path: inputEl.beEnhanced.beLiterate.fileContents.
 
