@@ -40,7 +40,6 @@ class FileManager {
      */
     #ei;
 
-    //#totalFileCountRead = 0;
 
     /**
      * 
@@ -78,13 +77,21 @@ class FileManager {
                     const {enhancedElement} = this.#self;
                     const enh = this.#ei.mountCnfg?.enhPropKey;
                     if(enh === undefined) throw 500;
+                    this.#self.fileContents = this.#fileContents;
                     const le = new LoadEvent(this.#fileContents, enh);
                     enhancedElement.dispatchEvent(le);
+                    this.disconnect();
                 }
                 break;
             case 'error':
+                console.error(e);
                 break;
         }
+    }
+
+    disconnect(){
+        if(this.#errorAbortController !== undefined) this.#errorAbortController.abort();
+        if(this.#loadAbortController !== undefined) this.#loadAbortController.abort();
     }
 }
 
@@ -162,24 +169,6 @@ class BeLiterate extends BE {
         // const {files} = enhancedElement;
         // if(files === null) return;
         const fileManager = new FileManager(self, this.#ei);
-
-        // let finishedCount = 0;
-        // const fileReader = new FileReader();
-        // fileReader.onload = (e) => {
-        //     fileContents.push(fileReader.result);
-        //     finishedCount++;
-        //     if(finishedCount === files.length){
-        //         self.fileContents = fileContents;
-        //     }
-        // }
-        // fileReader.onerror = (e) => {
-        //     console.error(e);
-        //     console.error(fileReader.error);
-        // }
-        // for(const file of files){
-        //     fileReader[readVerb](file);
-        // }
-        self.resolved = true;
     }
 }
 
