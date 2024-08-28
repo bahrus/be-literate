@@ -112,9 +112,9 @@ class BeLiterate extends BE {
             ...propInfo,
         },
         compacts: {
-            //when_itemCE_changes_invoke_attachProp: 0
+            when_readVerb_changes_invoke_hydrate: 0,
         },
-        actions: {},
+        //actions: {},
         positractions: [
             resolved, rejected,
         ]
@@ -152,9 +152,33 @@ class BeLiterate extends BE {
         console.log(enhancementInfo);
         this.#ei = enhancementInfo;
         await super.attach(enhancedElement, enhancementInfo);
-        this.#abortController = new AbortController()
+    }
+
+    /**
+     * 
+     * @param {Element} enhancedElement 
+     * @override 
+     */
+    async detach(enhancedElement){
+        await super.detach(enhancedElement);
+        this.#disconnect()
+    }
+
+    /**
+     * 
+     * @param {AP & BEAllProps} self 
+     * @returns 
+     */
+    async hydrate(self){
+        this.#disconnect();
+        this.#abortController = new AbortController();
+        const {enhancedElement} = self;
         enhancedElement.addEventListener('change', this, {signal: this.#abortController.signal});
-        this.resolved = true;
+        return {resolved: true}
+    }
+
+    #disconnect(){
+        if(this.#abortController !== undefined) this.#abortController.abort();
     }
 
     /**

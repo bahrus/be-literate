@@ -1,4 +1,4 @@
-# be-literate (📖) [TODO]
+# be-literate (📖)
 
 [![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/be-literate?style=for-the-badge)](https://bundlephobia.com/result?p=be-literate)
 <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/be-literate?compression=gzip">
