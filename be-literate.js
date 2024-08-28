@@ -35,16 +35,23 @@ class FileManager {
      */
     #self;
 
+    /**
+     * @type {EnhancementInfo}
+     */
+    #ei;
+
     //#totalFileCountRead = 0;
 
     /**
      * 
      * @param {AP & BEAllProps} self 
+     * @param {EnhancementInfo} ei
      * @returns 
      */
-    constructor(self){
+    constructor(self, ei){
         const {enhancedElement, readVerb} = self;
         this.#self = self;
+        this.#ei = ei;
         const {files} = enhancedElement;
         if(files === null) return;
         this.#files = files;
@@ -69,7 +76,9 @@ class FileManager {
                 this.#fileContents.push(fr.result);
                 if(this.#fileContents.length === this.#files.length){
                     const {enhancedElement} = this.#self;
-                    const le = new LoadEvent(this.#fileContents);
+                    const enh = this.#ei.mountCnfg?.enhPropKey;
+                    if(enh === undefined) throw 500;
+                    const le = new LoadEvent(this.#fileContents, enh);
                     enhancedElement.dispatchEvent(le);
                 }
                 break;
@@ -120,6 +129,11 @@ class BeLiterate extends BE {
         this.#readFile(self);
     }
 
+    /**
+     * @type {EnhancementInfo}
+     */
+    #ei;
+
 
     /**
      * 
@@ -128,6 +142,8 @@ class BeLiterate extends BE {
      * @override 
      */
     async attach(enhancedElement, enhancementInfo){
+        console.log(enhancementInfo);
+        this.#ei = enhancementInfo;
         await super.attach(enhancedElement, enhancementInfo);
         this.#abortController = new AbortController()
         enhancedElement.addEventListener('change', this, {signal: this.#abortController.signal});
@@ -140,11 +156,12 @@ class BeLiterate extends BE {
      * @returns 
      */
     #readFile(self){
+        console.log({self});
         const {enhancedElement, readVerb} = self;
         if(!enhancedElement.checkValidity()) return;
         // const {files} = enhancedElement;
         // if(files === null) return;
-        const fileManager = new FileManager(self);
+        const fileManager = new FileManager(self, this.#ei);
 
         // let finishedCount = 0;
         // const fileReader = new FileReader();
@@ -176,12 +193,24 @@ export class LoadEvent extends Event{
      * @type {Array<any>}
      */
     fileContents;
+
+    /**
+     * @type {string}
+     */
+    enh;
+
+    /**
+     * 
+     * @param {Array<any>} fileContents 
+     * @param {string} enh 
+     */
     constructor(
         fileContents, 
-
+        enh
         ){
         
         super(LoadEvent.EventName);
         this.fileContents = fileContents;
+        this.enh = enh;
     }
 }
