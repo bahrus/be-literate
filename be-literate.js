@@ -5,6 +5,63 @@ import { BE } from 'be-enhanced/BE.js';
 /** @import {Actions, PAP, AllProps, AP} from './ts-refs/be-literate/types.d.ts' */;
 /** @import {EnhancementInfo} from './ts-refs/trans-render/be/types.d.ts' */
 
+
+/** @implements {EventListenerObject} */
+class FileManager {
+    /**
+     * @type {FileReader}
+     */
+    #fileReader;
+    /**
+     * @type {AbortController | undefined}
+     */
+    #loadAbortController;
+
+    /**
+     * @type {AbortController | undefined}
+     */
+    #errorAbortController;
+
+    /**
+     * @type {Array<any>}
+     */
+    #fileContents = [];
+
+    #totalFileCountRead = 0;
+
+    /**
+     * 
+     * @param {AP & BEAllProps} self 
+     * @returns 
+     */
+    constructor(self){
+        const {enhancedElement, readVerb} = self;
+        const {files} = enhancedElement;
+        if(files === null) return;
+        const fr = new FileReader();
+        this.#fileReader = fr;
+        this.#loadAbortController = new AbortController();
+        fr.addEventListener('load', this, {signal: this.#loadAbortController.signal});
+        for(const file of files){
+            fr[readVerb](file);
+        }
+    }
+
+    /**
+     * 
+     * @param {ProgressEvent} e 
+     */
+    handleEvent(e){
+        console.log({e});
+        switch(e.type){
+            case 'load':
+                break;
+            case 'error':
+                break;
+        }
+    }
+}
+
 /**
  * @implements {Actions}
  * @implements {EventListenerObject}
@@ -53,28 +110,26 @@ class BeLiterate extends BE {
     #readFile(self){
         const {enhancedElement, readVerb} = self;
         if(!enhancedElement.checkValidity()) return;
-        const {files} = enhancedElement;
-        if(files === null) return;
-        /**
-         * @type {Array<any>}
-         */
-        const fileContents = [];
-        let finishedCount = 0;
-        const fileReader = new FileReader();
-        fileReader.onload = (e) => {
-            fileContents.push(fileReader.result);
-            finishedCount++;
-            if(finishedCount === files.length){
-                self.fileContents = fileContents;
-            }
-        }
-        fileReader.onerror = (e) => {
-            console.error(e);
-            console.error(fileReader.error);
-        }
-        for(const file of files){
-            fileReader[readVerb](file);
-        }
+        // const {files} = enhancedElement;
+        // if(files === null) return;
+        const fileManager = new FileManager(self);
+
+        // let finishedCount = 0;
+        // const fileReader = new FileReader();
+        // fileReader.onload = (e) => {
+        //     fileContents.push(fileReader.result);
+        //     finishedCount++;
+        //     if(finishedCount === files.length){
+        //         self.fileContents = fileContents;
+        //     }
+        // }
+        // fileReader.onerror = (e) => {
+        //     console.error(e);
+        //     console.error(fileReader.error);
+        // }
+        // for(const file of files){
+        //     fileReader[readVerb](file);
+        // }
         self.resolved = true;
     }
 }

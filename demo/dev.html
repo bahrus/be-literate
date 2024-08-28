@@ -7,8 +7,12 @@
     <title>Document</title>
 </head>
 <body>
-    <label for='file-selector'>Select File</label>
-    <input id='file-selector' type='file' be-literate>
+    <label>Select File
+        <input type='file' be-literate onload="
+            console.log(event);
+        ">
+    </label>
+    
     <script type='importmap'>
         {
             "imports":{
