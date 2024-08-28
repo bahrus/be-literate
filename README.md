@@ -55,7 +55,7 @@ Any web server than can serve static files will do, but...
 ## Using from ESM Module:
 
 ```JavaScript
-import 'be-literate/be-literate.js';
+import 'be-literate/behivior.js';
 ```
 
 ## Using from CDN:
