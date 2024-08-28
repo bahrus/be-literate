@@ -17,11 +17,11 @@ Syntax:
 ">
 ```
 
-It causes the input element to emit event "load", and the contents are provided event's fileContents.  In case other fellow enhancements are "overloading" the onload event in this way, check that the event's "enh" value is set to the name of the enhancement within the Shadow Realm ('be-literate' or '📖', for example) before proceeding.
+It causes the input element to emit event "load", and the contents are provided in the event's fileContents.  In case other fellow enhancements are "overloading" the onload event in this way, check that the event's "enh" value is set to the name of the enhancement within the Shadow Realm ('beLiterate' or '📖', for example) before proceeding.
 
 The file contents can be read via path: inputEl.beEnhanced.beLiterate.fileContents.
 
-In a closed environment, where the chances of clashes with other custom attributes can be controlled, consider using a smaller name, like , by referencing an alternate EMC file:
+In a closed environment, where the chances of clashes with other custom attributes can be controlled, consider using a smaller name, like 📖, by referencing an [alternate EMC file](https://github.com/bahrus/be-literate/blob/baseline/%F0%9F%93%96.js):
 
 ```html
 <input type=file 📖 onload="
@@ -35,7 +35,7 @@ In a closed environment, where the chances of clashes with other custom attribut
 To specify which of the file read options to apply to the file(s), set the attribute:
 
 ```html
-<input type=file be-literate=readAsDataURL>
+<input type=file 📖='{"readVerb": "readAsDataURL"}' >
 ```
 
 If not specified, as above, the default is readAsText.

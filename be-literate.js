@@ -68,7 +68,6 @@ class FileManager {
      * @param {ProgressEvent} e 
      */
     handleEvent(e){
-        //console.log({e});
         const fr = /** @type {FileReader} */ (e.target);
         switch(e.type){
             case 'load':
@@ -149,7 +148,6 @@ class BeLiterate extends BE {
      * @override 
      */
     async attach(enhancedElement, enhancementInfo){
-        console.log(enhancementInfo);
         this.#ei = enhancementInfo;
         await super.attach(enhancedElement, enhancementInfo);
     }
@@ -187,7 +185,6 @@ class BeLiterate extends BE {
      * @returns 
      */
     #readFile(self){
-        console.log({self});
         const {enhancedElement, readVerb} = self;
         if(!enhancedElement.checkValidity()) return;
         // const {files} = enhancedElement;
