@@ -17,7 +17,7 @@ Syntax:
 ">
 ```
 
-It causes the input element to emit event "load", and the contents are provided event's fileContents.
+It causes the input element to emit event "load", and the contents are provided event's fileContents.  In case other fellow enhancements are "overloading" the onload event in this way, check that the event's "enh" value is set to the name of the enhancement within the Shadow Realm ('be-literate' or '📖', for example) before proceeding.
 
 The file contents can be read via path: inputEl.beEnhanced.beLiterate.fileContents.
 
