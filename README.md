@@ -1,4 +1,4 @@
-# be-literate (📖)
+# be-literate (📖) [TODO]
 
 [![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/be-literate?style=for-the-badge)](https://bundlephobia.com/result?p=be-literate)
 <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/be-literate?compression=gzip">
@@ -20,6 +20,15 @@ Syntax:
 It causes the input element to emit event "load", and the contents are provided event's fileContents.
 
 The file contents can be read via path: inputEl.beEnhanced.beLiterate.fileContents.
+
+In a closed environment, where the chances of clashes with other custom attributes can be controlled, consider using a smaller name, like , by referencing an alternate EMC file:
+
+```html
+<input type=file 📖 onload="
+    const {fileContents} = event;
+    console.log({fileContents});
+">
+```
 
 ## Specifying Read Option
 
