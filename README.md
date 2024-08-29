@@ -19,7 +19,7 @@ Syntax:
 
 It causes the input element to emit event "load", and the contents are provided in the event's fileContents.  In case other fellow enhancements are "overloading" the onload event in this way, check that the event's "enh" value is set to the name of the enhancement within the Shadow Realm ('beLiterate' or '📖', for example) before proceeding.
 
-The file contents can be read via path: inputEl.beEnhanced.beLiterate.fileContents.
+
 
 In a closed environment, where the chances of clashes with other custom attributes can be controlled, consider using a smaller name, like 📖, by referencing an [alternate EMC file](https://github.com/bahrus/be-literate/blob/baseline/%F0%9F%93%96.js):
 
@@ -29,6 +29,10 @@ In a closed environment, where the chances of clashes with other custom attribut
     console.log({fileContents});
 ">
 ```
+
+(On Windows, for the 📖 emoji, type 🪟 + . + open book, and it will remain in recent memory).
+
+The file contents can be read via path: inputEl.beEnhanced.beLiterate.fileContents (or inputEl.beEnhanced.📖.fileContents).
 
 ## Specifying Read Option
 
