@@ -78,12 +78,13 @@ export class FileManager {
     handleEvent(e){
         const fr = /** @type {FileReader} */ (e.target);
         const {enhancedElement} = this.#self;
+        const enh = this.#ei.mountCnfg?.enhPropKey;
+        if(enh === undefined) throw 500;
         switch(e.type){
             case 'load':
                 this.#fileContents.push(fr.result);
                 if(this.#fileContents.length === this.#files.length){
-                    const enh = this.#ei.mountCnfg?.enhPropKey;
-                    if(enh === undefined) throw 500;
+                    
                     this.#self.fileContents = this.#fileContents;
                     const le = new LoadEvent(this.#fileContents, enh);
                     enhancedElement.dispatchEvent(le);
@@ -95,7 +96,7 @@ export class FileManager {
                 //enhancedElement.dispatchEvent(e);
                 break;
             case 'progress':
-                enhancedElement.dispatchEvent(new FMProgressEvent(e.lengthComputable, e.loaded, e.total));
+                enhancedElement.dispatchEvent(new FMProgressEvent(e.lengthComputable, e.loaded, e.total, enh));
                 break;
                 
         }
@@ -156,15 +157,21 @@ export class FMProgressEvent extends Event{
      */
     total;
     /**
+     * @type {string}
+     */
+    enh;
+    /**
      * 
      * @param {Boolean} lengthComputable 
      * @param {Number} loaded 
      * @param {Number} total 
+     * @param {String} enh
      */
-    constructor(lengthComputable, loaded, total){
+    constructor(lengthComputable, loaded, total, enh){
         super(FMProgressEvent.EventName);
         this.lengthComputable = lengthComputable;
         this.loaded = loaded;
         this.total = total;
+        this.enh = enh;
     }
 }
