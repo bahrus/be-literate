@@ -21,6 +21,11 @@ export class FileManager {
      */
     #errorAbortController;
 
+    /**
+     * @type {AbortController | undefined}
+     */
+    #progressAbortController;
+
     /** @type {FileList} */
     #files;
 
@@ -57,9 +62,13 @@ export class FileManager {
         this.#fileReader = fr;
         this.#loadAbortController = new AbortController();
         fr.addEventListener('load', this, {signal: this.#loadAbortController.signal});
+        this.#errorAbortController = new AbortController()
+        fr.addEventListener('error', this, {signal: this.#errorAbortController.signal});
         for(const file of files){
             fr[readVerb](file);
         }
+        this.#progressAbortController = new AbortController();
+        fr.addEventListener('progress', this, {signal: this.#progressAbortController.signal});
     }
 
     /**
@@ -68,11 +77,11 @@ export class FileManager {
      */
     handleEvent(e){
         const fr = /** @type {FileReader} */ (e.target);
+        const {enhancedElement} = this.#self;
         switch(e.type){
             case 'load':
                 this.#fileContents.push(fr.result);
                 if(this.#fileContents.length === this.#files.length){
-                    const {enhancedElement} = this.#self;
                     const enh = this.#ei.mountCnfg?.enhPropKey;
                     if(enh === undefined) throw 500;
                     this.#self.fileContents = this.#fileContents;
@@ -83,13 +92,19 @@ export class FileManager {
                 break;
             case 'error':
                 console.error(e);
+                enhancedElement.dispatchEvent(e);
                 break;
+            case 'progress':
+                enhancedElement.dispatchEvent(e);
+                break;
+                
         }
     }
 
     disconnect(){
         if(this.#errorAbortController !== undefined) this.#errorAbortController.abort();
         if(this.#loadAbortController !== undefined) this.#loadAbortController.abort();
+        if(this.#progressAbortController !== undefined) this.#progressAbortController.abort();
     }
 }
 
