@@ -9,8 +9,12 @@
 <body>
     <label>Select File
         <input type='file' 📖 onload="
-            console.log(event);
-        ">
+            console.log({msg: 'onload', event});
+        "
+        onprogress="
+            console.log({msg: 'onprogress', event});
+        "
+        >
     </label>
     
     <script type='importmap'>

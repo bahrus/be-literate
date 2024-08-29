@@ -92,10 +92,10 @@ export class FileManager {
                 break;
             case 'error':
                 console.error(e);
-                enhancedElement.dispatchEvent(e);
+                //enhancedElement.dispatchEvent(e);
                 break;
             case 'progress':
-                enhancedElement.dispatchEvent(e);
+                enhancedElement.dispatchEvent(new FMProgressEvent(e.lengthComputable, e.loaded, e.total));
                 break;
                 
         }
@@ -134,5 +134,37 @@ export class LoadEvent extends Event{
         super(LoadEvent.EventName);
         this.fileContents = fileContents;
         this.enh = enh;
+    }
+}
+
+export class ErrorEvent extends Event{
+
+}
+
+export class FMProgressEvent extends Event{
+    static EventName = 'progress';
+    /**
+     * @type {Boolean}
+     */
+    lengthComputable;
+    /**
+     * @type {Number}
+     */    
+    loaded;
+    /**
+     * @type {Number}
+     */
+    total;
+    /**
+     * 
+     * @param {Boolean} lengthComputable 
+     * @param {Number} loaded 
+     * @param {Number} total 
+     */
+    constructor(lengthComputable, loaded, total){
+        super(FMProgressEvent.EventName);
+        this.lengthComputable = lengthComputable;
+        this.loaded = loaded;
+        this.total = total;
     }
 }
