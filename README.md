@@ -25,6 +25,25 @@ Unfortunately, the platform provides no support for being able to confirm the in
 
 So in fact when you run the code above with "minimal" CSP rules in place, it won't work.  You would instead need to attach the onload/onprogress event handlers via a script that knows how to locate the element, or via a framework or a web component host.
 
+So what are the ways we can attach these event listeners onto the input element.  
+
+There are traditional ways, i.e. via a framework or web component or rendering helper library.
+
+But be-literate itself provides the following support:
+
+```html
+<script type=module>
+    const {on} = await import('be-literate/emc.js');
+    on('3TQBxg+JRkCJBoDO9cANgA', 'load', e => {
+        console.log(e.fileContents);
+    });
+    on('3TQBxg+JRkCJBoDO9cANgA', 'progress', e => {
+        console.log(e);
+    })
+</script>
+<input id=3TQBxg+JRkCJBoDO9cANgA type=file be-literate>
+```
+
 ## Alternative names
 
 In a closed environment, where the chances of clashes with other custom attributes can be controlled, consider using a smaller name, like 📖, by referencing an [alternate EMC file](https://github.com/bahrus/be-literate/blob/baseline/%F0%9F%93%96.js):
