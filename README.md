@@ -34,10 +34,11 @@ But be-literate itself provides the following support:
 ```html
 <script type=module>
     const {on} = await import('be-literate/emc.js');
-    on('3TQBxg+JRkCJBoDO9cANgA', 'load', e => {
+    const id = '3TQBxg+JRkCJBoDO9cANgA'
+    on('load', id, e => {
         console.log(e.fileContents);
     });
-    on('3TQBxg+JRkCJBoDO9cANgA', 'progress', e => {
+    on('progress', id, e => {
         console.log(e);
     })
 </script>
