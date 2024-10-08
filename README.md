@@ -42,7 +42,7 @@ But be-literate itself provides the following support:
         console.log(e);
     })
 </script>
-<input id=3TQBxg+JRkCJBoDO9cANgA type=file be-literate>
+<input  id=3TQBxg+JRkCJBoDO9cANgA type=file be-literate>
 ```
 
 The problem is timing.  We can't guarantee the event handlers would be attached before be-literate does it's thing.
@@ -53,6 +53,23 @@ But aside from that, how can we guarantee no timing issues?
 
 Option 1:  Use disabled / nudge
 Option 2:  Script activates be-literate enhancement
+
+```html
+<script type=module>
+    const {on, do} = await import('be-literate/emc.js');
+    const id = '3TQBxg+JRkCJBoDO9cANgA'
+    on('load', id, e => {
+        console.log(e.fileContents);
+    }, {
+        initOn: 'resolved'
+    });
+    on('progress', id, e => {
+        console.log(e);
+    });
+
+</script>
+<input disabled id=3TQBxg+JRkCJBoDO9cANgA type=file be-literate>
+```
 
 ## Alternative names
 
