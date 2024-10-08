@@ -45,6 +45,15 @@ But be-literate itself provides the following support:
 <input id=3TQBxg+JRkCJBoDO9cANgA type=file be-literate>
 ```
 
+The problem is timing.  We can't guarantee the event handlers would be attached before be-literate does it's thing.
+
+Granted, the requirement that the user select a file makes the timing issue fairly low risk in this case.
+
+But aside from that, how can we guarantee no timing issues?
+
+Option 1:  Use disabled / nudge
+Option 2:  Script activates be-literate enhancement
+
 ## Alternative names
 
 In a closed environment, where the chances of clashes with other custom attributes can be controlled, consider using a smaller name, like 📖, by referencing an [alternate EMC file](https://github.com/bahrus/be-literate/blob/baseline/%F0%9F%93%96.js):
