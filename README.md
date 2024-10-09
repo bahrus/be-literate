@@ -53,11 +53,16 @@ But be-literate itself provides the following support:
 
 ```html
 <script type=module>
-    const {on} = await import('be-literate/emc.js');
-    const id = '3TQBxg+JRkCJBoDO9cANgA';
-    on(id, {
+    (await import('be-literate/emc.js'))
+    .w('#3TQBxg+JRkCJBoDO9cANgA')
+    .a({
+        //these events are also called once the enhancement resolves
         load: e => console.log(e.fileContents),
         progress: e => console.log(e)
+    })
+    .e({
+        //apply other non serializable / high performing settings
+        //via props as opposed to 
     })
 </script>
 <input  id=3TQBxg+JRkCJBoDO9cANgA type=file be-literate>
