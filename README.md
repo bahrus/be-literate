@@ -29,6 +29,26 @@ So what are the ways we can attach these event listeners onto the input element.
 
 There are traditional ways, i.e. via a framework or web component or rendering helper library.
 
+For example:
+
+```html
+<input id=myFileInput type=file be-literate onload="
+    const {fileContents} = event;
+    console.log({fileContents});
+" onprogress="console.log(event)">
+<script>
+myFileInput.addEventListener('load', e => {
+    const {fileContents} = e;
+    console.log({fileContents});
+});
+myFileInput.addEventListener('progress', e => {
+    console.log(e);
+});
+
+</script>
+```
+
+
 But be-literate itself provides the following support:
 
 ```html
