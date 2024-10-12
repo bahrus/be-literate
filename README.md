@@ -10,6 +10,8 @@ be-literate turns this [code snippet](https://www.w3docs.com/learn-javascript/fi
 
 Syntax:
 
+## Example 1
+
 ```html
 <input type=file be-literate onload="
     const {fileContents} = event;
@@ -25,17 +27,14 @@ Unfortunately, the platform provides no support for being able to confirm the in
 
 So in fact when you run the code above with "minimal" CSP rules in place, it won't work.  You would instead need to attach the onload/onprogress event handlers via a script that knows how to locate the element, or via a framework or a web component host.
 
-So what are the ways we can attach these event listeners onto the input element.  
+So what are the ways we can attach these event listeners onto the input element?  
 
 There are traditional ways, i.e. via a framework or web component or rendering helper library.
 
 For example:
 
 ```html
-<input id=myFileInput type=file be-literate onload="
-    const {fileContents} = event;
-    console.log({fileContents});
-" onprogress="console.log(event)">
+<input id=myFileInput type=file be-literate>
 <script>
 myFileInput.addEventListener('load', e => {
     const {fileContents} = e;
@@ -54,45 +53,16 @@ But be-literate itself provides the following support:
 ```html
 <script type=module blocking=render>
     (await import('be-literate/emc.js'))
-    .w('#3TQBxg+JRkCJBoDO9cANgA')
+    .w('#TQBxgJRkCJBoDO9cANgA')
     .a({
-        //these events are also called once the enhancement resolves
         load: e => console.log(e.fileContents),
         progress: e => console.log(e)
-    })
-    .e({
-        //apply other non serializable / high performing settings
-        //via props as opposed to 
-    })
+    });
 </script>
-<input  id=3TQBxg+JRkCJBoDO9cANgA type=file be-literate>
+<input  id=TQBxgJRkCJBoDO9cANgA type=file be-literate>
 ```
 
-The problem is timing.  We can't guarantee the event handlers would be attached before be-literate does it's thing.
 
-Granted, the requirement that the user select a file makes the timing issue fairly low risk in this case.
-
-But aside from that, how can we guarantee no timing issues?
-
-Option 1:  Use disabled / nudge
-Option 2:  Script activates be-literate enhancement
-
-```html
-<script type=module>
-    const {on, do} = await import('be-literate/emc.js');
-    const id = '3TQBxg+JRkCJBoDO9cANgA'
-    on('load', id, e => {
-        console.log(e.fileContents);
-    }, {
-        initOn: 'resolved'
-    });
-    on('progress', id, e => {
-        console.log(e);
-    });
-
-</script>
-<input disabled id=3TQBxg+JRkCJBoDO9cANgA type=file be-literate>
-```
 
 ## Alternative names
 
