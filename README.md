@@ -62,6 +62,10 @@ But be-literate itself provides the following support:
 <input  id=TQBxgJRkCJBoDO9cANgA type=file be-literate>
 ```
 
+"w" stands for "where" and it allows for css match expressions.
+
+"a" stands for "addEventListener" or "actions". 
+
 
 
 ## Alternative names
