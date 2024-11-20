@@ -51,7 +51,7 @@ myFileInput.addEventListener('progress', e => {
 But be-literate itself provides the following support:
 
 ```html
-<script type=module blocking=render>
+<script type=module>
     (await import('be-literate/emc.js'))
     .w('#TQBxgJRkCJBoDO9cANgA')
     .a({

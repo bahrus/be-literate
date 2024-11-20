@@ -9,6 +9,7 @@ import { w as bw } from 'be-hive/w.js';
  * @type {EMC<any, AP>}
  */
 export const emc = {
+    enhancedElementMatches: 'input[type="file"]',
     base: 'be-literate',
     enhPropKey: 'beLiterate',
     map: {
