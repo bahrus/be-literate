@@ -21,6 +21,21 @@ Syntax:
 
 It causes the input element to emit event "load", and the contents are provided in the event's fileContents.  In case other fellow enhancements are "overloading" the onload event in this way, check that the event's "enh" value is set to the name of the enhancement within the Shadow Realm ('beLiterate' or '📖', for example) before proceeding.
 
+## Alternative names
+
+In a closed environment, where the chances of clashes with other custom attributes can be controlled, consider using a smaller name, like 📖, by referencing an [alternate EMC file](https://github.com/bahrus/be-literate/blob/baseline/%F0%9F%93%96.js):
+
+```html
+<input type=file 📖 onload="
+    const {fileContents} = event;
+    console.log({fileContents});
+">
+```
+
+(On Windows, for the 📖 emoji, type 🪟 + . + open book, and it will remain in recent memory for future lookups).
+
+The file contents can be read via path: inputEl.beEnhanced.beLiterate.fileContents (or inputEl.beEnhanced.📖.fileContents).
+
 ## Security [TODO]
 
 Unfortunately, the platform provides no support for being able to confirm the integrity of the markup shown above.
@@ -34,7 +49,7 @@ There are traditional ways, i.e. via a framework or web component or rendering h
 For example:
 
 ```html
-<input id=myFileInput type=file be-literate>
+<input id=myFileInput type=file 📖>
 <script>
 myFileInput.addEventListener('load', e => {
     const {fileContents} = e;
@@ -52,36 +67,20 @@ But be-literate itself provides the following support:
 
 ```html
 <script type=module>
-    (await import('be-literate/emc.js'))
+    (await import('be-literate/📖.js'))
     .w('#TQBxgJRkCJBoDO9cANgA')
     .a({
         load: e => console.log(e.fileContents),
         progress: e => console.log(e)
     });
 </script>
-<input  id=TQBxgJRkCJBoDO9cANgA type=file be-literate>
+<input  id=TQBxgJRkCJBoDO9cANgA type=file 📖>
 ```
 
 "w" stands for "where" and it allows for css match expressions.
 
 "a" stands for "addEventListener" or "actions". 
 
-
-
-## Alternative names
-
-In a closed environment, where the chances of clashes with other custom attributes can be controlled, consider using a smaller name, like 📖, by referencing an [alternate EMC file](https://github.com/bahrus/be-literate/blob/baseline/%F0%9F%93%96.js):
-
-```html
-<input type=file 📖 onload="
-    const {fileContents} = event;
-    console.log({fileContents});
-">
-```
-
-(On Windows, for the 📖 emoji, type 🪟 + . + open book, and it will remain in recent memory).
-
-The file contents can be read via path: inputEl.beEnhanced.beLiterate.fileContents (or inputEl.beEnhanced.📖.fileContents).
 
 ## Specifying Read Option
 
@@ -92,6 +91,44 @@ To specify which of the file read options to apply to the file(s), set the attri
 ```
 
 If not specified, as above, the default is readAsText.
+
+## Where to store and read the file contents? [TODO]
+
+As mentioned previously, by default, the contents of the file are stored, and can be retried from:  
+
+```JavaScript
+inputEl.beEnhanced.beLiterate.fileContents
+```
+
+or
+
+```JavaScript
+inputEl.beEnhanced.📖.fileContents
+```
+
+matching the name of the enhKey specified in the registration file.
+
+However, being that:
+
+1.  The contents of the file could be quite large, so using RAM may not be ideal, and
+2.  The file contents may be applicable to a large "audience" of components within the application
+3.  Accessing something like inputEl.beEnhanced.📖.fileContents is a bit cumbersome (and there are timing considerations to grapple with  as well)
+
+... it seems  worthwhile to provide for more "strategic" locations to store/retrieve the contents.
+
+For that we make use of the [Uniform Storage Path](https://github.com/bahrus/trans-render/wiki/VIIII.--Uniform-Storage-Path) protocol:
+
+```html
+<input type=file 📖='{"writeTo": "sessionStorage://myFile"}' >
+
+<script>
+    window.addEventListener('message', e => {
+        
+    })
+```
+
+
+
 
 ## Running locally
 
