@@ -119,13 +119,20 @@ However, being that:
 For that we make use of the [Uniform Storage Path](https://github.com/bahrus/trans-render/wiki/VIIII.--Uniform-Storage-Path) protocol:
 
 ```html
-<input type=file 📖='{"writeTo": "sessionStorage://myFile"}' >
+<input type=file 📖='{
+    "writeToRoot": "indexedDB://myDB/myFiles"
+}'>
 
 <script>
     window.addEventListener('message', e => {
         
     })
+</script>
 ```
+
+By default, uses the name of the file as the "key" to the storage location.
+
+However, a 
 
 
 
