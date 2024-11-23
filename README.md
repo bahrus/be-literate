@@ -36,7 +36,7 @@ In a closed environment, where the chances of clashes with other custom attribut
 
 The file contents can be read via path: inputEl.beEnhanced.beLiterate.fileContents (or inputEl.beEnhanced.📖.fileContents).
 
-## Security [TODO]
+## Security
 
 Unfortunately, the platform provides no support for being able to confirm the integrity of the markup shown above.
 
