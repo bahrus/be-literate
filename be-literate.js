@@ -29,9 +29,12 @@ class BeLiterate extends BE {
         },
         compacts: {
             when_readVerb_changes_invoke_hydrate: 0,
-            when_fileContents_changes_invoke_storeFileContents: 0,
         },
-        //actions: {},
+        actions: {
+            storeFileContents:{
+                ifAllOf: ['fileContents', 'writeTo']
+            }
+        },
         positractions: [
             resolved, rejected,
         ]
@@ -99,8 +102,8 @@ class BeLiterate extends BE {
     async storeFileContents(self){
         /** @type {Array<USL>} */
         const writtenTo = [];
-        const {fileContents, writeTo} = self;
-        const {} = await import('trans-render/XV/set.js')
+        const {fileContents, writeTo, readVerb} = self;
+        const {set} = await import('trans-render/XV/set.js');
         for(const fc of fileContents){
             const [f, c] = fc;
             let adjustedWriteTo = writeTo;
@@ -109,6 +112,15 @@ class BeLiterate extends BE {
                 if(val){
                     adjustedWriteTo = /** @type {USL} */(writeTo.replaceAll(`{file.${key}}`, val.toString()));
                 }
+                let adjustedContent = c;
+                if(readVerb === 'readAsText' && adjustedWriteTo.startsWith('indexedDB://')){
+                    try{
+                        //TODO:  as?
+                        adjustedContent = JSON.parse(c);
+                    }catch(e){}
+                }
+                await set(adjustedWriteTo, adjustedContent);
+                writtenTo.push(adjustedWriteTo);
             }
             //let adjustedWriteTo = writeTo.replaceAll('{file.name}', f.name).replaceAll('{file.lastModified}', f.lastModified)
         }
