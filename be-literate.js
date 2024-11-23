@@ -2,8 +2,8 @@
 import { resolved, rejected, propInfo} from 'be-enhanced/cc.js';
 import { BE } from 'be-enhanced/BE.js';
 /** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
-/** @import {Actions, PAP, AllProps, AP} from './ts-refs/be-literate/types.d.ts' */;
-/** @import {EnhancementInfo} from './ts-refs/trans-render/be/types.d.ts' */
+/** @import {Actions, PAP, AllProps, AP, BAP} from './ts-refs/be-literate/types.d.ts' */;
+/** @import {EnhancementInfo} from './node_modules/be-enhanced/ts-refs/trans-render/be/types.d.ts' */
 
 
 
@@ -23,6 +23,9 @@ class BeLiterate extends BE {
         },
         propInfo: {
             ...propInfo,
+            writeTo: {},
+            fileContents: {},
+            writtenTo: {},
         },
         compacts: {
             when_readVerb_changes_invoke_hydrate: 0,
@@ -78,15 +81,25 @@ class BeLiterate extends BE {
 
     /**
      * 
-     * @param {AP & BEAllProps} self 
-     * @returns 
+     * @param {BAP} self 
      */
     async hydrate(self){
         this.#disconnect();
         this.#abortController = new AbortController();
         const {enhancedElement} = self;
         enhancedElement.addEventListener('change', this, {signal: this.#abortController.signal});
-        return {resolved: true}
+        return /** @type {PAP} */ ({resolved: true});
+    }
+
+    /**
+     * 
+     * @param {BAP} self 
+     */
+    async storeFileContents(self){
+        /** @type {Array<import('./ts-refs/trans-render/XV/types').USL>} */
+        const writtenTo = []
+        return /** @type {PAP} */ ({
+        })
     }
 
     #disconnect(){

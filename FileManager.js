@@ -4,6 +4,7 @@
 /** @import {Actions, PAP, AllProps, AP} from './ts-refs/be-literate/types.d.ts' */;
 /** @import {EnhancementInfo} from './ts-refs/trans-render/be/types.d.ts' */
 
+const sym = Symbol();
 
 /** @implements {EventListenerObject} */
 export class FileManager {
@@ -56,19 +57,22 @@ export class FileManager {
         this.#self = self;
         this.#ei = ei;
         const {files} = enhancedElement;
+        //console.log({files});
         if(files === null) return;
         this.#files = files;
-        const fr = new FileReader();
-        this.#fileReader = fr;
-        this.#loadAbortController = new AbortController();
-        fr.addEventListener('load', this, {signal: this.#loadAbortController.signal});
-        this.#errorAbortController = new AbortController()
-        fr.addEventListener('error', this, {signal: this.#errorAbortController.signal});
         for(const file of files){
+            const fr = new FileReader();
+            fr[sym] = file;
+            this.#fileReader = fr;
+            this.#loadAbortController = new AbortController();
+            fr.addEventListener('load', this, {signal: this.#loadAbortController.signal});
+            this.#errorAbortController = new AbortController()
+            fr.addEventListener('error', this, {signal: this.#errorAbortController.signal});
+            this.#progressAbortController = new AbortController();
+            fr.addEventListener('progress', this, {signal: this.#progressAbortController.signal});
             fr[readVerb](file);
         }
-        this.#progressAbortController = new AbortController();
-        fr.addEventListener('progress', this, {signal: this.#progressAbortController.signal});
+        
     }
 
     /**
@@ -77,6 +81,8 @@ export class FileManager {
      */
     handleEvent(e){
         const fr = /** @type {FileReader} */ (e.target);
+        const file = fr[sym];
+        console.log({file});
         const {enhancedElement} = this.#self;
         const enh = this.#ei.mountCnfg?.enhPropKey;
         if(enh === undefined) throw 500;
@@ -117,6 +123,10 @@ export class LoadEvent extends Event{
      */
     fileContents;
 
+    /**
+     * @type {Array<string>}
+     */
+    fileNames;
     /**
      * @type {string}
      */

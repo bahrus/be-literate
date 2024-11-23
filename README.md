@@ -120,7 +120,7 @@ For that we make use of the [Uniform Storage Path](https://github.com/bahrus/tra
 
 ```html
 <input type=file 📖='{
-    "writeToRoot": "indexedDB://myDB/myFiles"
+    "writeTo": "indexedDB://myDB/myFiles/{fileName}"
 }'>
 
 <script>
