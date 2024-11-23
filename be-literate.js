@@ -135,7 +135,6 @@ class BeLiterate extends BE {
             const adjustedContent = await this.parseContents(self, c, adjustedWriteTo);
             await set(adjustedWriteTo, adjustedContent);
             writtenTo.push(adjustedWriteTo);
-            //let adjustedWriteTo = writeTo.replaceAll('{file.name}', f.name).replaceAll('{file.lastModified}', f.lastModified)
         }
         return /** @type {PAP} */ ({
             writtenTo,
