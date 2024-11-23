@@ -31,7 +31,7 @@ export class FileManager {
     #files;
 
     /**
-     * @type {Array<any>}
+     * @type {Array<[File, any]>}
      */
     #fileContents = [];
 
@@ -81,16 +81,15 @@ export class FileManager {
      */
     handleEvent(e){
         const fr = /** @type {FileReader} */ (e.target);
-        const file = fr[sym];
-        console.log({file});
         const {enhancedElement} = this.#self;
         const enh = this.#ei.mountCnfg?.enhPropKey;
         if(enh === undefined) throw 500;
         switch(e.type){
             case 'load':
-                this.#fileContents.push(fr.result);
+                const file = fr[sym];
+                console.log({file});
+                this.#fileContents.push([file, fr.result]);
                 if(this.#fileContents.length === this.#files.length){
-                    
                     this.#self.fileContents = this.#fileContents;
                     const le = new LoadEvent(this.#fileContents, enh);
                     enhancedElement.dispatchEvent(le);
@@ -119,7 +118,7 @@ export class LoadEvent extends Event{
 
     static EventName = 'load';
     /**
-     * @type {Array<any>}
+     * @type {Array<[File, any]>}
      */
     fileContents;
 
