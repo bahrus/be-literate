@@ -125,7 +125,6 @@ class BeLiterate extends BE {
             writtenTo.push(adjustedWriteTo);
             //let adjustedWriteTo = writeTo.replaceAll('{file.name}', f.name).replaceAll('{file.lastModified}', f.lastModified)
         }
-        console.log({fileContents});
         return /** @type {PAP} */ ({
             writtenTo,
             fileContents: undefined

@@ -87,7 +87,6 @@ export class FileManager {
         switch(e.type){
             case 'load':
                 const file = fr[sym];
-                console.log({file});
                 this.#fileContents.push([file, fr.result]);
                 if(this.#fileContents.length === this.#files.length){
                     this.#self.fileContents = this.#fileContents;

@@ -4,22 +4,23 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Example 1</title>
+    <title>Write To</title>
     <!-- #include virtual="/imports.html" -->
 </head>
 <body>
     <label>Select File
         <input type='file' 📖='{
             "writeTo": "indexedDB://myDB/myFiles/{file.name}"
-        }' onload="
-            console.log({msg: 'onload', event});
-        "
-        onprogress="
-            console.log({msg: 'onprogress', event});
-        "
+        }'
         >
     </label>
-    
+    <script>
+        window.addEventListener('message', e => {
+            if(e.data instanceof Set && e.data.has('indexedDB://myDB/myFiles')){
+                console.log('iah');
+            }
+        });
+    </script>
     <script type='module'>
         import '/📖.js';
     </script>

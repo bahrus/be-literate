@@ -92,7 +92,7 @@ To specify which of the file read options to apply to the file(s), set the attri
 
 If not specified, as above, the default is readAsText.
 
-## Where to store and read the file contents? [TODO]
+## Where to store and read the file contents?
 
 As mentioned previously, by default, the contents of the file are stored, and can be retried from:  
 
@@ -124,11 +124,11 @@ For that we make use of the [Uniform Storage Path](https://github.com/bahrus/tra
 }'>
 
 <script>
-    window.addEventListener('message', e => {
-        if(Array.isArray(e.data) && e.data.includes('indexedDB://myDB/myFiles')){
-            ...
-        }
-    })
+        window.addEventListener('message', e => {
+            if(e.data instanceof Set && e.data.has('indexedDB://myDB/myFiles')){
+                ...
+            }
+        });
 </script>
 ```
 
