@@ -98,6 +98,24 @@ class BeLiterate extends BE {
     /**
      * 
      * @param {BAP} self 
+     * @param {any} c 
+     * @param {USL} adjustedWriteTo
+     */
+    async parseContents(self, c, adjustedWriteTo){
+        let adjustedContent = c;
+        const {readVerb} = self;
+        if(readVerb === 'readAsText' && adjustedWriteTo.startsWith('indexedDB://')){
+            try{
+                //TODO:  as?
+                adjustedContent = JSON.parse(c);
+            }catch(e){}
+        }
+        return adjustedContent;
+    }
+
+    /**
+     * 
+     * @param {BAP} self 
      */
     async storeFileContents(self){
         /** @type {Array<USL>} */
@@ -114,13 +132,7 @@ class BeLiterate extends BE {
                 }
                 
             }
-            let adjustedContent = c;
-            if(readVerb === 'readAsText' && adjustedWriteTo.startsWith('indexedDB://')){
-                try{
-                    //TODO:  as?
-                    adjustedContent = JSON.parse(c);
-                }catch(e){}
-            }
+            const adjustedContent = await this.parseContents(self, c, adjustedWriteTo);
             await set(adjustedWriteTo, adjustedContent);
             writtenTo.push(adjustedWriteTo);
             //let adjustedWriteTo = writeTo.replaceAll('{file.name}', f.name).replaceAll('{file.lastModified}', f.lastModified)
