@@ -4,7 +4,7 @@ import { BE } from 'be-enhanced/BE.js';
 /** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
 /** @import {Actions, PAP, AllProps, AP, BAP} from './ts-refs/be-literate/types.d.ts' */;
 /** @import {EnhancementInfo} from './node_modules/be-enhanced/ts-refs/trans-render/be/types.d.ts' */
-
+/** @import {USL} from './ts-refs/trans-render/XV/types' */
 
 
 
@@ -29,6 +29,7 @@ class BeLiterate extends BE {
         },
         compacts: {
             when_readVerb_changes_invoke_hydrate: 0,
+            when_fileContents_changes_invoke_storeFileContents: 0,
         },
         //actions: {},
         positractions: [
@@ -96,9 +97,25 @@ class BeLiterate extends BE {
      * @param {BAP} self 
      */
     async storeFileContents(self){
-        /** @type {Array<import('./ts-refs/trans-render/XV/types').USL>} */
-        const writtenTo = []
+        /** @type {Array<USL>} */
+        const writtenTo = [];
+        const {fileContents, writeTo} = self;
+        const {} = await import('trans-render/XV/set.js')
+        for(const fc of fileContents){
+            const [f, c] = fc;
+            let adjustedWriteTo = writeTo;
+            for(const key in f){
+                const val = f[key];
+                if(val){
+                    adjustedWriteTo = /** @type {USL} */(writeTo.replaceAll(`{file.${key}}`, val.toString()));
+                }
+            }
+            //let adjustedWriteTo = writeTo.replaceAll('{file.name}', f.name).replaceAll('{file.lastModified}', f.lastModified)
+        }
+        console.log({fileContents});
         return /** @type {PAP} */ ({
+            writtenTo,
+            fileContents: undefined
         })
     }
 

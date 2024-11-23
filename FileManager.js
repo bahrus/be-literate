@@ -1,7 +1,7 @@
 // @ts-check
 
 /** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
-/** @import {Actions, PAP, AllProps, AP} from './ts-refs/be-literate/types.d.ts' */;
+/** @import {Actions, PAP, AllProps, AP, FileAndContents} from './ts-refs/be-literate/types.d.ts' */;
 /** @import {EnhancementInfo} from './ts-refs/trans-render/be/types.d.ts' */
 
 const sym = Symbol();
@@ -31,7 +31,7 @@ export class FileManager {
     #files;
 
     /**
-     * @type {Array<[File, any]>}
+     * @type {Array<FileAndContents>}
      */
     #fileContents = [];
 
@@ -118,7 +118,7 @@ export class LoadEvent extends Event{
 
     static EventName = 'load';
     /**
-     * @type {Array<[File, any]>}
+     * @type {Array<FileAndContents>}
      */
     fileContents;
 
@@ -133,7 +133,7 @@ export class LoadEvent extends Event{
 
     /**
      * 
-     * @param {Array<any>} fileContents 
+     * @param {Array<FileAndContents>} fileContents 
      * @param {string} enh 
      */
     constructor(
