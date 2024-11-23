@@ -110,18 +110,19 @@ class BeLiterate extends BE {
             for(const key in f){
                 const val = f[key];
                 if(val){
-                    adjustedWriteTo = /** @type {USL} */(writeTo.replaceAll(`{file.${key}}`, val.toString()));
+                    adjustedWriteTo = /** @type {USL} */(adjustedWriteTo.replaceAll(`{file.${key}}`, val.toString()));
                 }
-                let adjustedContent = c;
-                if(readVerb === 'readAsText' && adjustedWriteTo.startsWith('indexedDB://')){
-                    try{
-                        //TODO:  as?
-                        adjustedContent = JSON.parse(c);
-                    }catch(e){}
-                }
-                await set(adjustedWriteTo, adjustedContent);
-                writtenTo.push(adjustedWriteTo);
+                
             }
+            let adjustedContent = c;
+            if(readVerb === 'readAsText' && adjustedWriteTo.startsWith('indexedDB://')){
+                try{
+                    //TODO:  as?
+                    adjustedContent = JSON.parse(c);
+                }catch(e){}
+            }
+            await set(adjustedWriteTo, adjustedContent);
+            writtenTo.push(adjustedWriteTo);
             //let adjustedWriteTo = writeTo.replaceAll('{file.name}', f.name).replaceAll('{file.lastModified}', f.lastModified)
         }
         console.log({fileContents});
