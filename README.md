@@ -110,7 +110,7 @@ matching the name of the enhKey specified in the registration file.
 
 However, being that:
 
-1.  The contents of the file could be quite large, so using RAM may not be ideal, and
+1.  The contents of the file could be quite large, so using RAM may not be ideal for long term storage, and
 2.  The file contents may be applicable to a large "audience" of components within the application
 3.  Accessing something like inputEl.beEnhanced.📖.fileContents is a bit cumbersome (and there are timing considerations to grapple with  as well)
 
@@ -125,15 +125,12 @@ For that we make use of the [Uniform Storage Path](https://github.com/bahrus/tra
 
 <script>
     window.addEventListener('message', e => {
-        
+        if(Array.isArray(e.data) && e.data.includes('indexedDB://myDB/myFiles')){
+            ...
+        }
     })
 </script>
 ```
-
-By default, uses the name of the file as the "key" to the storage location.
-
-However, a 
-
 
 
 
