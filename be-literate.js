@@ -1,6 +1,7 @@
 // @ts-check
 import { resolved, rejected, propInfo} from 'be-enhanced/cc.js';
 import { BE } from 'be-enhanced/BE.js';
+import {dispatchEvent as de} from 'trans-render/positractions/dispatchEvent.js';
 /** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
 /** @import {Actions, PAP, AllProps, AP, BAP} from './ts-refs/be-literate/types.d.ts' */;
 /** @import {EnhancementInfo} from './node_modules/be-enhanced/ts-refs/trans-render/be/types.d.ts' */
@@ -39,6 +40,8 @@ class BeLiterate extends BE {
             resolved, rejected,
         ]
     };
+
+    de = de;
 
     /**
      * @type {AbortController | undefined}
