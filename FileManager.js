@@ -39,7 +39,7 @@ export class FileManager {
     #self;
 
     /**
-     * Enhancement key ('BeLiterate' or '📖'), stamped onto dispatched events.
+     * Enhancement key ('beLiterate' or '📖'), stamped onto dispatched events.
      * @type {string | symbol}
      */
     #enhKey;

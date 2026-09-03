@@ -32,7 +32,7 @@ Use `be-literate/emc.json` for the full `be-literate` attribute name, or `be-lit
 " onprogress="console.log(event)">
 ```
 
-It causes the input element to emit event "load", and the contents are provided in the event's fileContents.  In case other fellow enhancements are "overloading" the onload event in this way, check that the event's "enh" value is set to the enhKey of the enhancement ('BeLiterate' or '📖', matching the `enhKey` in the registration file) before proceeding.
+It causes the input element to emit event "load", and the contents are provided in the event's fileContents.  In case other fellow enhancements are "overloading" the onload event in this way, check that the event's "enh" value is set to the enhKey of the enhancement ('beLiterate' or '📖', matching the `enhKey` in the registration file) before proceeding.
 
 ## Alternative names
 

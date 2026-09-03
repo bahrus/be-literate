@@ -10,7 +10,7 @@
 export const emc = {
     matching: 'input[type="file"]',
     enhConfig: {
-        enhKey: 'BeLiterate',
+        enhKey: 'beLiterate',
         spawn: 'be-literate/be-literate.js',
         withAttrs: {
             base: 'be-literate',

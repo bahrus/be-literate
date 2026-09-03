@@ -17,7 +17,7 @@ class BeLiterate {
     #abortController;
 
     /**
-     * Enhancement key ('BeLiterate' or '📖'), stamped onto the load / progress events
+     * Enhancement key ('beLiterate' or '📖'), stamped onto the load / progress events
      * so consumers overloading these event names can tell which enhancement fired.
      * @type {string | symbol}
      */

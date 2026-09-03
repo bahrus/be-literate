@@ -39,7 +39,7 @@
     "trans-render": "0.0.961"
   },
   "devDependencies": {
-    "@playwright/test": "1.49.0",
+    "@playwright/test": "1.62.1",
     "spa-ssi": "0.0.28"
   },
   "repository": {
