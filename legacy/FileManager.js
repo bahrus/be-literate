@@ -1,6 +1,8 @@
 // @ts-check
 
-/** @import {AP, AllProps, FileAndContents} from './types/be-literate/types' */;
+/** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
+/** @import {Actions, PAP, AllProps, AP, FileAndContents} from './ts-refs/be-literate/types.d.ts' */;
+/** @import {EnhancementInfo} from './ts-refs/trans-render/be/types.d.ts' */
 
 const sym = Symbol();
 
@@ -34,27 +36,26 @@ export class FileManager {
     #fileContents = [];
 
     /**
-     * @type {AP}
+     * @type {AP & BEAllProps}
      */
     #self;
 
     /**
-     * Enhancement key ('BeLiterate' or '📖'), stamped onto dispatched events.
-     * @type {string | symbol}
+     * @type {EnhancementInfo}
      */
-    #enhKey;
+    #ei;
 
 
     /**
-     *
-     * @param {AP} self
-     * @param {string | symbol} enhKey
-     * @returns
+     * 
+     * @param {AP & BEAllProps} self 
+     * @param {EnhancementInfo} ei
+     * @returns 
      */
-    constructor(self, enhKey){
+    constructor(self, ei){
         const {enhancedElement, readVerb} = self;
         this.#self = self;
-        this.#enhKey = enhKey;
+        this.#ei = ei;
         const {files} = enhancedElement;
         //console.log({files});
         if(files === null) return;
@@ -71,17 +72,17 @@ export class FileManager {
             fr.addEventListener('progress', this, {signal: this.#progressAbortController.signal});
             fr[readVerb](file);
         }
-
+        
     }
 
     /**
-     *
-     * @param {ProgressEvent} e
+     * 
+     * @param {ProgressEvent} e 
      */
     handleEvent(e){
         const fr = /** @type {FileReader} */ (e.target);
         const {enhancedElement} = this.#self;
-        const enh = this.#enhKey;
+        const enh = this.#ei.mountCnfg?.enhPropKey;
         if(enh === undefined) throw 500;
         switch(e.type){
             case 'load':
@@ -101,7 +102,7 @@ export class FileManager {
             case 'progress':
                 enhancedElement.dispatchEvent(new FMProgressEvent(e.lengthComputable, e.loaded, e.total, enh));
                 break;
-
+                
         }
     }
 
@@ -125,20 +126,20 @@ export class LoadEvent extends Event{
      */
     fileNames;
     /**
-     * @type {string | symbol}
+     * @type {string}
      */
     enh;
 
     /**
-     *
-     * @param {Array<FileAndContents>} fileContents
-     * @param {string | symbol} enh
+     * 
+     * @param {Array<FileAndContents>} fileContents 
+     * @param {string} enh 
      */
     constructor(
-        fileContents,
+        fileContents, 
         enh
         ){
-
+        
         super(LoadEvent.EventName);
         this.fileContents = fileContents;
         this.enh = enh;
@@ -157,22 +158,22 @@ export class FMProgressEvent extends Event{
     lengthComputable;
     /**
      * @type {Number}
-     */
+     */    
     loaded;
     /**
      * @type {Number}
      */
     total;
     /**
-     * @type {string | symbol}
+     * @type {string}
      */
     enh;
     /**
-     *
-     * @param {Boolean} lengthComputable
-     * @param {Number} loaded
-     * @param {Number} total
-     * @param {String | symbol} enh
+     * 
+     * @param {Boolean} lengthComputable 
+     * @param {Number} loaded 
+     * @param {Number} total 
+     * @param {String} enh
      */
     constructor(lengthComputable, loaded, total, enh){
         super(FMProgressEvent.EventName);

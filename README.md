@@ -8,7 +8,20 @@ Enhance the input element so it can declaratively read contents from a local fil
 
 be-literate turns this [code snippet](https://www.w3docs.com/learn-javascript/file-and-filereader.html) into an attribute-based HTML Enhancement / Decorator / Behavior / Directive / Custom Attribute.
 
-Syntax:
+## Registration
+
+be-literate is registered with [be-hive](https://github.com/bahrus/be-hive) by pointing at the generated EMC JSON config:
+
+```html
+<be-hive>
+    <script type=emc src="be-literate/📖.json"></script>
+</be-hive>
+<script type=module>
+    import 'be-hive/be-hive.js';
+</script>
+```
+
+Use `be-literate/emc.json` for the full `be-literate` attribute name, or `be-literate/📖.json` for the `📖` shorthand.
 
 ## Example 1
 
@@ -19,11 +32,11 @@ Syntax:
 " onprogress="console.log(event)">
 ```
 
-It causes the input element to emit event "load", and the contents are provided in the event's fileContents.  In case other fellow enhancements are "overloading" the onload event in this way, check that the event's "enh" value is set to the name of the enhancement within the Shadow Realm ('beLiterate' or '📖', for example) before proceeding.
+It causes the input element to emit event "load", and the contents are provided in the event's fileContents.  In case other fellow enhancements are "overloading" the onload event in this way, check that the event's "enh" value is set to the enhKey of the enhancement ('BeLiterate' or '📖', matching the `enhKey` in the registration file) before proceeding.
 
 ## Alternative names
 
-In a closed environment, where the chances of clashes with other custom attributes can be controlled, consider using a smaller name, like 📖, by referencing an [alternate EMC file](https://github.com/bahrus/be-literate/blob/baseline/%F0%9F%93%96.js):
+In a closed environment, where the chances of clashes with other custom attributes can be controlled, consider using a smaller name, like 📖, by registering the [alternate EMC config](https://github.com/bahrus/be-literate/blob/baseline/%F0%9F%93%96.mjs) (`📖.json`) as shown under [Registration](#registration):
 
 ```html
 <input type=file 📖 onload="
@@ -33,8 +46,6 @@ In a closed environment, where the chances of clashes with other custom attribut
 ```
 
 (On Windows, for the 📖 emoji, type 🪟 + . + open book, and it will remain in recent memory for future lookups).
-
-The file contents can be read via path: inputEl.beEnhanced.beLiterate.fileContents (or inputEl.beEnhanced.📖.fileContents).
 
 ## Security
 
@@ -63,24 +74,10 @@ myFileInput.addEventListener('progress', e => {
 ```
 
 
-But be-literate itself provides the following support:
-
-```html
-<script type=module>
-    (await import('be-literate/📖.js'))
-    .w('#TQBxgJRkCJBoDO9cANgA')
-    .a({
-        load: e => console.log(e.fileContents),
-        progress: e => console.log(e)
-    });
-</script>
-<input  id=TQBxgJRkCJBoDO9cANgA type=file 📖>
-```
-
-"w" stands for "where" and it allows for css match expressions.
-
-"a" stands for "addEventListener" or "actions". 
-
+> **Note:** Earlier versions of be-literate exposed a `.w(cssQuery).a({...})` helper from the
+> registration module. The modern build generates a static JSON config instead of a runtime
+> module, so that helper is gone — attach listeners directly with `addEventListener` as shown
+> above, or via your framework / web component host.
 
 ## Specifying Read Option
 
@@ -94,25 +91,14 @@ If not specified, as above, the default is readAsText.
 
 ## Where to store and read the file contents?
 
-As mentioned previously, by default, the contents of the file are stored, and can be retried from:  
-
-```JavaScript
-inputEl.beEnhanced.beLiterate.fileContents
-```
-
-or
-
-```JavaScript
-inputEl.beEnhanced.📖.fileContents
-```
-
-matching the name of the enhKey specified in the registration file.
+By default, the contents of the file are provided on the `load` event (`event.fileContents`), and are
+also assigned to the `fileContents` property of the enhancement instance.
 
 However, being that:
 
 1.  The contents of the file could be quite large, so using RAM may not be ideal for long term storage, and
 2.  The file contents may be applicable to a large "audience" of components within the application
-3.  Accessing something like inputEl.beEnhanced.📖.fileContents is a bit cumbersome (and there are timing considerations to grapple with  as well)
+3.  Reaching into the enhancement instance for `fileContents` is a bit cumbersome (and there are timing considerations to grapple with as well)
 
 ... it seems  worthwhile to provide for more "strategic" locations to store/retrieve the contents.
 
@@ -134,28 +120,20 @@ For that we make use of the [Uniform Storage Path](https://github.com/bahrus/tra
 
 
 
-## Running locally
+## Viewing Demos Locally
 
-Any web server than can serve static files will do, but...
+1. Install git
+2. Fork/clone this repo
+3. Install node.js
+4. Open command window to folder where you cloned this repo
+5. > git submodule update --init --recursive
+6. > npm install
+7. > npm run build
+8. > npm run serve
+9. Open http://localhost:8000/demo/ in a modern browser (Chrome/Edge 146+ — JSON module imports with type assertion are required)
 
-1.  Install git.
-2.  Do a git clone or a git fork of repository https://github.com/bahrus/be-literate
-3.  Install node.js
-4.  Open command window to folder where you cloned this repo.
-5.  > npm install
-6.  > npm run serve
-7.  Open http://localhost:3030/demo/dev in a modern browser.
+## Running Tests
 
-## Using from ESM Module:
-
-```JavaScript
-import 'be-literate/behivior.js';
 ```
-
-## Using from CDN:
-
-```html
-<script type=module crossorigin=anonymous>
-    import 'https://esm.run/be-literate';
-</script>
+> npm run test
 ```

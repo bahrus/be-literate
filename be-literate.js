@@ -1,94 +1,72 @@
 // @ts-check
-import { resolved, rejected, propInfo} from 'be-enhanced/cc.js';
-import { BE } from 'be-enhanced/BE.js';
-import {dispatchEvent as de} from 'trans-render/positractions/dispatchEvent.js';
-/** @import {BEConfig, IEnhancement, BEAllProps} from './ts-refs/be-enhanced/types.d.ts' */
-/** @import {Actions, PAP, AllProps, AP, BAP} from './ts-refs/be-literate/types.d.ts' */;
-/** @import {EnhancementInfo} from './node_modules/be-enhanced/ts-refs/trans-render/be/types.d.ts' */
-/** @import {USL} from './ts-refs/trans-render/XV/types' */
-
-
+/** @import {Actions, PAP, AllProps, AP, ProPAP} from './types/be-literate/types' */;
+/** @import {RoundaboutOptions, RAConfig} from './types/roundabout/types' */;
+/** @import {ElementEnhancementGateway, SpawnContext} from './types/assign-gingerly/types' */;
+/** @import {EMC} from './types/mount-observer/types' */;
+/** @import {USL} from './types/be-literate/types' */;
 
 /**
  * @implements {Actions}
  * @implements {EventListenerObject}
- * 
  */
-class BeLiterate extends BE {
-    /**
-     * @type {BEConfig<AP & BEAllProps, Actions & IEnhancement, any>}
-     */
-    static config = {
-        propDefaults: {
-            readVerb: 'readAsText',
-        },
-        propInfo: {
-            ...propInfo,
-            writeTo: {},
-            fileContents: {},
-            writtenTo: {},
-        },
-        compacts: {
-            when_readVerb_changes_invoke_hydrate: 0,
-        },
-        actions: {
-            storeFileContents:{
-                ifAllOf: ['fileContents', 'writeTo']
-            }
-        },
-        positractions: [
-            resolved, rejected,
-        ]
-    };
-
-    de = de;
+class BeLiterate {
 
     /**
      * @type {AbortController | undefined}
      */
-    #abortController
+    #abortController;
+
     /**
-     * 
-     * @param {Event} e 
+     * Enhancement key ('BeLiterate' or '📖'), stamped onto the load / progress events
+     * so consumers overloading these event names can tell which enhancement fired.
+     * @type {string | symbol}
+     */
+    #enhKey;
+
+    /**
+     * @this {AllProps & Actions}
+     * @param {Element & ElementEnhancementGateway} enhancedElement
+     * @param {SpawnContext} ctx
+     * @param {PAP} initVals
+     */
+    constructor(enhancedElement, ctx, initVals){
+        this.init(this, enhancedElement, ctx, initVals);
+    }
+
+    /**
+     * @param {AllProps} self
+     * @param {Element & ElementEnhancementGateway} enhancedElement
+     * @param {SpawnContext} ctx
+     * @param {PAP} initVals
+     */
+    async init(self, enhancedElement, ctx, initVals){
+        const {customData} = /** @type {EMC<any, AllProps, Element, RAConfig<AllProps, Actions>>} */ (ctx.emc);
+        this.#enhKey = ctx.config.enhKey;
+        /**
+         * @type {RoundaboutOptions}
+         */
+        const raOptions = {
+            ...customData,
+            vm: self,
+            initialPropVals: {
+                enhancedElement,
+                ...customData?.defaultPropVals,
+                ...initVals
+            }
+        };
+        (await import('roundabout-lib/roundabout.js')).roundabout(raOptions);
+    }
+
+    /**
+     * @param {Event} e
      */
     async handleEvent(e) {
-        const self = 
-        /** @type {AP & BEAllProps} */
-        /** @type {any} */
-        (this);
+        const self = /** @type {AP} */ (/** @type {any} */ (this));
         this.#readFile(self);
     }
 
     /**
-     * @type {EnhancementInfo}
-     */
-    #ei;
-
-
-    /**
-     * 
-     * @param {Element} enhancedElement 
-     * @param {EnhancementInfo} enhancementInfo
-     * @override 
-     */
-    async attach(enhancedElement, enhancementInfo){
-        this.#ei = enhancementInfo;
-        await super.attach(enhancedElement, enhancementInfo);
-    }
-
-    /**
-     * 
-     * @param {Element} enhancedElement 
-     * @override 
-     */
-    async detach(enhancedElement){
-        await super.detach(enhancedElement);
-        this.#disconnect()
-    }
-
-    /**
-     * 
-     * @param {BAP} self 
+     * @param {AP} self
      */
     async hydrate(self){
         this.#disconnect();
@@ -99,9 +77,8 @@ class BeLiterate extends BE {
     }
 
     /**
-     * 
-     * @param {BAP} self 
-     * @param {any} c 
+     * @param {AP} self
+     * @param {any} c
      * @param {USL} adjustedWriteTo
      */
     async parseContents(self, c, adjustedWriteTo){
@@ -117,13 +94,12 @@ class BeLiterate extends BE {
     }
 
     /**
-     * 
-     * @param {BAP} self 
+     * @param {AP} self
      */
     async storeFileContents(self){
         /** @type {Array<USL>} */
         const writtenTo = [];
-        const {fileContents, writeTo, readVerb} = self;
+        const {fileContents, writeTo} = self;
         const {set} = await import('trans-render/XV/set.js');
         for(const fc of fileContents){
             const [f, c] = fc;
@@ -133,7 +109,6 @@ class BeLiterate extends BE {
                 if(val){
                     adjustedWriteTo = /** @type {USL} */(adjustedWriteTo.replaceAll(`{file.${key}}`, val.toString()));
                 }
-                
             }
             const adjustedContent = await this.parseContents(self, c, adjustedWriteTo);
             await set(adjustedWriteTo, adjustedContent);
@@ -142,7 +117,7 @@ class BeLiterate extends BE {
         return /** @type {PAP} */ ({
             writtenTo,
             fileContents: undefined
-        })
+        });
     }
 
     #disconnect(){
@@ -150,18 +125,14 @@ class BeLiterate extends BE {
     }
 
     /**
-     * 
-     * @param {AP & BEAllProps} self 
-     * @returns 
+     * @param {AP} self
      */
     async #readFile(self){
-        const {enhancedElement, readVerb} = self;
+        const {enhancedElement} = self;
         if(!enhancedElement.checkValidity()) return;
-        const {FileManager} = await import('./FileManager.js')
-        const fileManager = new FileManager(self, this.#ei);
+        const {FileManager} = await import('be-literate/FileManager.js');
+        new FileManager(self, this.#enhKey);
     }
 }
 
-await BeLiterate.bootUp();
 export { BeLiterate }
-

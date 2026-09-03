@@ -6,19 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Example 2</title>
     <!-- #include virtual="/imports.html" -->
+    <be-hive>
+        <script type=emc src="be-literate/📖.json"></script>
+    </be-hive>
+    <script type=module>
+        import 'be-hive/be-hive.js';
+        const input = document.getElementById('TQBxgJRkCJBoDO9cANgA');
+        input.addEventListener('load', e => console.log(e.fileContents));
+        input.addEventListener('progress', e => console.log(e));
+    </script>
 </head>
 <body>
-    <script type=module>
-        (await import('/📖.js'))
-        .w('#TQBxgJRkCJBoDO9cANgA')
-        .a({
-            load: e => console.log(e.fileContents),
-            progress: e => console.log(e)
-        });
-    </script>
     <label>Select File
         <input id="TQBxgJRkCJBoDO9cANgA" type='file' 📖>
     </label>
-    
 </body>
 </html>
