@@ -100,7 +100,7 @@ class BeLiterate {
         /** @type {Array<USL>} */
         const writtenTo = [];
         const {fileContents, writeTo} = self;
-        const {set} = await import('trans-render/XV/set.js');
+        const {set} = await import('fifteenth/set.js');
         for(const fc of fileContents){
             const [f, c] = fc;
             let adjustedWriteTo = writeTo;

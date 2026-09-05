@@ -102,7 +102,7 @@ However, being that:
 
 ... it seems  worthwhile to provide for more "strategic" locations to store/retrieve the contents.
 
-For that we make use of the [Uniform Storage Path](https://github.com/bahrus/trans-render/wiki/VIIII.--Uniform-Storage-Path) protocol:
+For that we make use of the Uniform Storage Path (USL) protocol, via [`fifteenth`](https://github.com/bahrus/fifteenth)'s `set`:
 
 ```html
 <input type=file 📖='{
@@ -110,13 +110,18 @@ For that we make use of the [Uniform Storage Path](https://github.com/bahrus/tra
 }'>
 
 <script>
+        // fifteenth broadcasts window.postMessage([usp])  — an Array of USL strings —
+        // (or [usp, usl] when the writeTo USL carries a ?. accessor chain).
         window.addEventListener('message', e => {
-            if(e.data instanceof Set && e.data.has('indexedDB://myDB/myFiles')){
+            if(Array.isArray(e.data) && e.data.some(u => u.startsWith('indexedDB://myDB/myFiles/'))){
                 ...
             }
         });
 </script>
 ```
+
+`writeTo` also accepts `localStorage://`, `sessionStorage://`, `cookie://`, `locationHash://` and
+`globalThis://` targets — see the [`fifteenth` docs](https://github.com/bahrus/fifteenth#one-time-push-of-single-resource).
 
 
 

@@ -21,9 +21,11 @@
         >
     </label>
     <script>
+        // fifteenth's set() broadcasts window.postMessage([usp]) (or [usp, usl] when a
+        // ?. accessor chain is used) — an Array of Uniform Storage Path strings.
         window.addEventListener('message', e => {
-            if(e.data instanceof Set && e.data.has('indexedDB://myDB/myFiles')){
-                console.log('iah');
+            if(Array.isArray(e.data) && e.data.some(u => u.startsWith('indexedDB://myDB/myFiles/'))){
+                console.log('iah', e.data);
             }
         });
     </script>

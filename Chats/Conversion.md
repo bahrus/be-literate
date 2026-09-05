@@ -14,7 +14,7 @@ Please provide your implementation notes below, including any gaps you encounter
 |------|--------|--------|
 | 1 | Migrate types `ts-refs/be-literate` → `types/be-literate` | `types/be-literate/types.d.ts` created; `ts-refs/` folder deleted and its gitlink removed from the index (`git rm -r --cached ts-refs`). It had no `.gitmodules` entry. |
 | 2 | Archive legacy | Already done before I started — `legacy/` holds `be-literate.js`, `FileManager.js`, `emc.js`, `📖.js`. |
-| 3 | `package.json` deps + scripts | `build` script added (`node emc.mjs > emc.json && node 📖.mjs > 📖.json`); deps swapped to `be-hive@0.1.18`, `mount-observer@0.1.53`, `roundabout-lib@0.0.36`; `be-enhanced` dropped. See deviations for `trans-render` / `serve`. `npm install` run (network was available). |
+| 3 | `package.json` deps + scripts | `build` script added (`node emc.mjs > emc.json && node 📖.mjs > 📖.json`); `be-enhanced` / `trans-render` dropped. Final runtime deps: `be-hive@0.1.18`, `mount-observer@0.1.53`, `roundabout-lib@0.0.36`, `fifteenth@0.0.1`, `assign-gingerly@0.0.96` (last two added in Response II). See deviations for `serve`. `npm install` run (network was available). |
 | 4 | `imports.html` | Rewritten to the modern import map (`be-literate/` → `/`, deps → `/node_modules/…/`). |
 | 5 | Coding standards | `.kiro/steering/coding-standards.md` created verbatim from the template. |
 | 6 | Standalone types | `EndUserProps` no longer extends `IEnhancement`; `enhancedElement` added to `AllProps` (typed `HTMLInputElement` since the code calls `.files` / `.checkValidity()`); `BAP` removed, all `BAP` → `AP`; `USL` inlined as `type USL = string` (was imported from `trans-render/XV/types`). |
@@ -38,7 +38,7 @@ Ran the demos headless against **Edge 152** (Playwright 1.62, driven transiently
 - `change` → `FileReader` → `load` event fires with `event.enh` = `"beLiterate"` / `"📖"` and `event.fileContents` = `[[File, "…contents…"]]`.
 - `progress` event fires (`FMProgressEvent`).
 - `readVerb` default `readAsText` applied; inline `onload` / `onprogress` attributes work.
-- `WriteTo.html` (`📖='{"writeTo":"indexedDB://myDB/myFiles/{file.name}"}'`): `storeFileContents` runs with no errors and creates IndexedDB database `myDB` via `trans-render/XV/set.js`.
+- `WriteTo.html` (`📖='{"writeTo":"indexedDB://myDB/myFiles/{file.name}"}'`): `storeFileContents` runs with no errors and creates IndexedDB database `myDB` via `fifteenth/set.js` (see Response II — originally `trans-render/XV/set.js`).
 
 `npm run build` regenerates both JSON files and both retain `customData`.
 
@@ -46,7 +46,7 @@ Ran the demos headless against **Edge 152** (Playwright 1.62, driven transiently
 
 ## Gaps / deviations from the instructions
 
-1. **`trans-render` kept as a runtime dependency.** `storeFileContents` writes file contents to a Uniform Storage Path (`indexedDB://…`, etc.) via `trans-render/XV/set.js`, and the `USL` type came from `trans-render/XV/types`. The modern architecture (the `types` submodule) has **no equivalent** of the XV / Uniform Storage Path protocol — nothing matched `USL`, `XV/set`, "Uniform Storage" anywhere under `types/`. So Step 9's "remove imports from trans-render" could not be fully honored: `be-literate.js` still does `await import('trans-render/XV/set.js')` and `types.d.ts` inlines `export type USL = string`. If there is a modern replacement for XV/set, `storeFileContents` should be repointed at it.
+1. ~~**`trans-render` kept as a runtime dependency.**~~ **Resolved (Response II).** `storeFileContents` now writes via [`fifteenth`](https://github.com/bahrus/fifteenth)'s `set` (`await import('fifteenth/set.js')`); `trans-render` is removed from `dependencies`, `imports.html`, and `node_modules`. Details in "Claude's Response to Response II" below.
 
 2. **The `.w(cssQuery).a({…})` convenience API is gone.** Legacy `emc.js` / `📖.js` were browser modules that exported a `w` helper (via `be-hive/w.js`) so you could do `(await import('be-literate/📖.js')).w('#id').a({load, progress})`. The modern `emc.mjs` is a build-time script producing static JSON and exports nothing for the browser. `SeparateEventHandlers.html` and the README were rewritten to use plain `addEventListener`. If this helper is still wanted it needs a separate small runtime module.
 
@@ -98,3 +98,72 @@ Both done.
 - **Step 3** rewritten: drop the hard-coded version list; state that `npm run update` (`ncu -u`) must bump **every** dependency *and* `devDependency` (playwright, the SSI dev server, everything) to the latest published point version, and that the version numbers in the doc are illustrative only. Removed the "DO NOT modify `devDependencies`" instruction.
 - **Step 7**: `enhKey` now `'[enhPropKey]'` — "keep the SAME key the legacy project used for `enhPropKey`" (camelCase, e.g. `beLiterate`). The be-committed worked example changed from `enhKey: 'BeCommitted'` to `enhKey: 'beCommitted'`; the do-invoke examples from `'DoInvoke'` to `'doInvoke'`.
 - **Step 9**: added Key Change #9 — the exported JS class keeps its `Be…` / `Do…` PascalCase name; only the registration key (`enhKey`) is the legacy camelCase.
+
+## Bruce's Response II
+
+I just added a reference to package [fifteenth](https://github.com/bahrus/fifteenth) that has a [set method](https://github.com/bahrus/fifteenth#one-time-push-of-single-resource).
+
+If this is sufficient to replace the dependency on trans-render, please do so, and add your implementation notes below.  If not, let me know what needs to be modified in order to support this ability.
+
+## Claude's Response to Response II
+
+**Done — `fifteenth` replaces `trans-render`.** `be-literate.js` `storeFileContents` now does `await import('fifteenth/set.js')` instead of `trans-render/XV/set.js`; `trans-render` is gone from `dependencies`, `imports.html`, and `node_modules`.
+
+### Why it's a clean fit
+
+`fifteenth`'s `set` is signature-compatible with `trans-render/XV/set.js`:
+
+| | `trans-render/XV/set.js` | `fifteenth/set.js` |
+|---|---|---|
+| import | `import {set} from 'trans-render/XV/set.js'` | `import {set} from 'fifteenth/set.js'` |
+| call | `await set(usl, val, ctx?)` | `await set(usl, val, ctx?)` — identical |
+| `indexedDB://db/store/key` | ✅ (record shape `{key, value}`) | ✅ (same record shape) |
+| `localStorage` / `sessionStorage` / `cookie` / `locationHash` | ✅ | ✅ |
+| `globalThis://` | ❌ | ✅ (bonus) |
+| `?.` accessor-chain merge (create-on-write) | ✅ | ✅ |
+
+`be-literate` only ever calls `set(adjustedWriteTo, adjustedContent)` (no `ctx`), so the swap is literally one import specifier.
+
+### Two things changed for downstream consumers
+
+1. **Storage-change broadcast payload shape.** `trans-render/XV` did `postMessage(new Set([...]))` containing the protocol (`'indexedDB'`), the **store root** (`'indexedDB://myDB/myFiles'`), *and* the full record path. `fifteenth` does `window.postMessage([usp])` — a plain **`Array`**, and for a plain write (no `?.` chain, which is be-literate's case) that array holds only the **full record path**: `['indexedDB://myDB/myFiles/greeting.json']`. With a `?.` chain it's `[usp, usl]`.
+   - The old "subscribe to the store root" pattern `e.data instanceof Set && e.data.has('indexedDB://myDB/myFiles')` no longer matches. `demo/WriteTo.html` and the README were updated to `Array.isArray(e.data) && e.data.some(u => u.startsWith('indexedDB://myDB/myFiles/'))`.
+
+2. **`assign-gingerly` is now a direct, pinned dependency (`0.0.96`).** This is the non-obvious part:
+   - `fifteenth@0.0.1` imports `parseProtocolRef` from `assign-gingerly/resolve/getValues.js`, which **only exists in `assign-gingerly@0.0.96`**.
+   - `roundabout-lib@0.0.36` and `mount-observer@0.1.53` pin `assign-gingerly` to **exactly `0.0.87`**, so without intervention npm keeps `0.0.87` at the root and the flat browser import map (`"assign-gingerly/": "/node_modules/assign-gingerly/"`) serves `0.0.87` to *everyone* — `fifteenth/set.js` then throws `does not provide an export named 'parseProtocolRef'` (confirmed in-browser).
+   - Fix: add `"assign-gingerly": "0.0.96"` to `dependencies` so npm hoists **one** copy (`0.0.96`) to the root. npm still nests `0.0.87` under `roundabout-lib/` and `mount-observer/` for Node resolution, but the browser import map — the thing that actually matters here — serves the single root `0.0.96`.
+   - **Verified in-browser (Edge 152):** the full be-hive → mount-observer → roundabout-lib read path *and* `fifteenth/set.js` all work against `assign-gingerly@0.0.96`. The `0.0.87` pin in those packages is conservative; `0.0.96` is compatible in practice. If a future `roundabout-lib`/`mount-observer` release moves *past* `0.0.96` in a breaking way while `fifteenth` still needs `0.0.96`, this single-flat-copy arrangement would need revisiting.
+
+### Files touched in Response II
+
+- `be-literate.js` — import specifier `trans-render/XV/set.js` → `fifteenth/set.js`.
+- `package.json` — removed `trans-render`; added `fifteenth@0.0.1`, `assign-gingerly@0.0.96` (both exact).
+- `imports.html` — removed `trans-render/`; added `fifteenth/` (kept `assign-gingerly/`).
+- `demo/WriteTo.html`, `README.md` — `postMessage` listener examples updated for the `Array` payload; README "Where to store" now points at the `fifteenth` docs and lists the extra protocols.
+- `types/be-literate/types.d.ts` — `USL` doc-comment now references `fifteenth` instead of `trans-render/XV/types` (still `export type USL = string`).
+
+### Regression check (Edge 152, all demos, no console errors)
+
+- `InlineEventHandlers` / `SeparateEventHandlers` / `EnhancesTest`: `load` fires, `event.enh === '📖'`, contents read.
+- `WriteTo`: IndexedDB `myDB` created; stored record `{key: 'greeting.json', value: {k: 1}}` (contents `JSON.parse`d because `readVerb` is `readAsText` and the target is `indexedDB://`); `window.postMessage(['indexedDB://myDB/myFiles/greeting.json'])` observed.
+- Canonical `be-literate` attribute (`emc.json`): `event.enh === 'beLiterate'`.
+- `npm run build` regenerates `emc.json` / `📖.json` unchanged.
+
+### Not addressed
+
+- ~~worth a sentence in the instructions~~ **Done (Response III).** `EnhancementConversionInstructions.md` Step 9 "Update utility imports" now has a `fifteenth` blurb (import shape, the `assign-gingerly` hoist caveat, and the `Array` vs `Set` `postMessage` behavior change); Step 3 points at `fifteenth` as the modern replacement for `trans-render/XV/set.js`.
+- The `assign-gingerly` version-pinning friction above is really an upstream packaging issue (`roundabout-lib`/`mount-observer` pinning `assign-gingerly` exact rather than as a `^`/`~` range). Bumping those packages' pins would let `npm run update` handle `assign-gingerly` on its own without it being a direct dep here.
+
+## Bruce's Response III
+
+Yes, please add a small blurb about `fifteenth` to the conversion instructions.
+
+## Claude's Response to Response III
+
+Added to `types/EnhancementConversionInstructions.md`:
+
+- **Step 9, "Update utility imports"** — a new bullet for Uniform Storage Path (USL) writes: swap `trans-render/XV/set.js` → `fifteenth/set.js` (same `(usl, val, ctx?)` signature), add `fifteenth` to `dependencies` + an import-map entry, add `assign-gingerly` as a direct pinned dep so the flat import map serves the one version `fifteenth` needs, and note the `postMessage` payload change (`Array` of path strings, not a `Set`).
+- **Step 3, dependency list** — the "keep a legacy dep only if no replacement exists" note now names `fifteenth` as the replacement for `trans-render/XV/set.js` and cross-refs Step 9.
+
+No code changes this round — instructions only.
