@@ -130,7 +130,7 @@ class BeLiterate {
     async #readFile(self){
         const {enhancedElement} = self;
         if(!enhancedElement.checkValidity()) return;
-        const {FileManager} = await import('be-literate/FileManager.js');
+        const {FileManager} = await import('./FileManager.js');
         new FileManager(self, this.#enhKey);
     }
 }
