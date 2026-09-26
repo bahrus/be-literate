@@ -125,6 +125,34 @@ For that we make use of the Uniform Storage Path (USL) protocol, via [`fifteenth
 
 
 
+## Programmatic Attachment
+
+When rendering on the client via a framework or web component, you can skip the attribute (and its JSON stringifying/parsing) entirely. First register the config once, via `def.js`:
+
+```JS
+import { defBeLiterate } from 'be-literate/def.js';
+const emc = await defBeLiterate(document.body); // or a shadow root's host, for a scoped registry
+```
+
+### Declarative -- via `enh.set`
+
+```JS
+// only the first access needs to go through .set -- it triggers attachment.
+myFileInput.enh.set.beLiterate.readVerb = 'readAsDataURL';
+myFileInput.enh.beLiterate.writeTo = 'indexedDB://myDB/myFiles/{file.name}';
+```
+
+This is order-independent -- properties can be set via `.set` before `defBeLiterate` has even been called.
+
+### Imperative -- via `enh.get()`
+
+```JS
+const beLiterate = myFileInput.enh.get(emc);
+beLiterate.writeTo = 'indexedDB://myDB/myFiles/{file.name}';
+```
+
+See [demo/Programmatic/](demo/Programmatic/) for runnable examples.
+
 ## Viewing Demos Locally
 
 1. Install git

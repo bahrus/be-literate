@@ -18,15 +18,22 @@
             ]
         },
         "actions": {
+            "hydrate": {
+                "ifKeyIn": [
+                    "readVerb",
+                    "initialized"
+                ],
+                "ifAllOf": [
+                    "enhancedElement",
+                    "initialized"
+                ]
+            },
             "storeFileContents": {
                 "ifAllOf": [
                     "fileContents",
                     "writeTo"
                 ]
             }
-        },
-        "compacts": {
-            "when_readVerb_changes_call_hydrate": 0
         },
         "defaultPropVals": {
             "readVerb": "readAsText"

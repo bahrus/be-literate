@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AttributeWriteTo</title>
+    <!-- #include virtual="/imports.html" -->
+    <be-hive>
+        <script type=emc src="be-literate/📖.json"></script>
+    </be-hive>
+    <script type=module>
+        import 'be-hive/be-hive.js';
+    </script>
+</head>
+<body>
+    <!-- Declarative (attribute) attachment, to guard against regressions in
+         the original spawn path. -->
+    <input id="subject" type="file" 📖='{"writeTo": "sessionStorage://AttributeWriteTo-{file.name}"}'>
+    <div id="target"></div>
+    <script type=module>
+        window.addEventListener('message', e => {
+            if(Array.isArray(e.data) && e.data.includes('sessionStorage://AttributeWriteTo-hello.txt')
+                && sessionStorage.getItem('AttributeWriteTo-hello.txt') === 'hello'){
+                target.setAttribute('mark', 'good');
+            }
+        });
+        function whenResolved(){
+            if(subject.enh?.['📖']?.resolved === true){
+                target.setAttribute('ready', '');
+                return;
+            }
+            requestAnimationFrame(whenResolved);
+        }
+        whenResolved();
+    </script>
+</body>
+</html>

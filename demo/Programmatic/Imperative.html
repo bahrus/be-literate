@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmatic imperative</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <label>Select File
+        <input id="input" type="file">
+    </label>
+    <script type=module>
+        import {defBeLiterate} from '/def.js';
+        const emc = await defBeLiterate(document.body);
+        const beLiterate = input.enh.get(emc);
+        Object.assign(beLiterate, {
+            readVerb: 'readAsText',
+            writeTo: 'sessionStorage://{file.name}',
+        });
+        input.addEventListener('load', e => {
+            console.log({fileContents: e.fileContents, writtenTo: beLiterate.writtenTo});
+        });
+    </script>
+</body>
+</html>

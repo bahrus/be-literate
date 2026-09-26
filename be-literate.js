@@ -40,7 +40,9 @@ class BeLiterate {
      * @param {PAP} initVals
      */
     async init(self, enhancedElement, ctx, initVals){
-        const {customData} = /** @type {EMC<any, AllProps, Element, RAConfig<AllProps, Actions>>} */ (ctx.emc);
+        // ctx.emc is only populated on the declarative (attribute) spawn path;
+        // enh.get()/enh.set only pass ctx.config, onto which def.js copies customData.
+        const {customData} = /** @type {EMC<any, AllProps, Element, RAConfig<AllProps, Actions>>} */ (ctx.emc || ctx.config);
         this.#enhKey = ctx.config.enhKey;
         /**
          * @type {RoundaboutOptions}
@@ -54,7 +56,8 @@ class BeLiterate {
                 ...initVals
             }
         };
-        (await import('roundabout-lib/roundabout.js')).roundabout(raOptions);
+        await (await import('roundabout-lib/roundabout.js')).roundabout(raOptions);
+        self.initialized = true;
     }
 
     /**

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmatic declarative out of sequence</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <label>Select File
+        <input id="input" type="file">
+    </label>
+    <script type=module>
+        import {defBeLiterate} from '/def.js';
+        //only the first call needs to use .set
+        //it triggers the attachment of the enhancement.
+        input.enh.set.beLiterate.readVerb = 'readAsText';
+        input.enh.beLiterate.writeTo = 'sessionStorage://{file.name}';
+        await defBeLiterate(document.body);
+        input.addEventListener('load', e => {
+            console.log({fileContents: e.fileContents, writtenTo: input.enh.beLiterate.writtenTo});
+        });
+        console.log(input.enh.beLiterate);
+    </script>
+</body>
+</html>

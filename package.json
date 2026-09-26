@@ -17,7 +17,11 @@
   "module": "be-literate.js",
   "exports": {
     ".": "./be-literate.js",
-    "./be-literate.js": "./be-literate.js"
+    "./be-literate.js": "./be-literate.js",
+    "./FileManager.js": "./FileManager.js",
+    "./def.js": "./def.js",
+    "./emc.json": "./emc.json",
+    "./📖.json": "./📖.json"
   },
   "files": [
     "*.js",

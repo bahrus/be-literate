@@ -25,12 +25,18 @@ export const emc = {
             properties: ['enhancedElement']
         },
         actions: {
+            // Gated on `initialized` (set at the end of `init`) rather than a
+            // `readVerb` change alone: a `readVerb` assigned programmatically
+            // before roundabout finishes wiring accessors is "rescued" as the
+            // accessor's initial value without notifying, so a readVerb-only
+            // trigger would never fire hydrate in that case.
+            hydrate: {
+                ifKeyIn: ['readVerb', 'initialized'],
+                ifAllOf: ['enhancedElement', 'initialized']
+            },
             storeFileContents: {
                 ifAllOf: ['fileContents', 'writeTo']
             }
-        },
-        compacts: {
-            when_readVerb_changes_call_hydrate: 0
         },
         defaultPropVals: {
             readVerb: 'readAsText'

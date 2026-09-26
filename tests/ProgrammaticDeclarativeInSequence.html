@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProgrammaticDeclarativeInSequence</title>
+    <!-- #include virtual="/imports.html" -->
+</head>
+<body>
+    <!-- No be-literate attribute at all -- the enhancement config is
+         registered first, then properties are set via the `.set` proxy. -->
+    <input id="subject" type="file">
+    <div id="target"></div>
+    <script type=module>
+        import {defBeLiterate} from '/def.js';
+        await defBeLiterate(document.body);
+        // Only the first `.set` access per enhKey needs to go through `.set` --
+        // it triggers attachment. Later property writes can go straight to
+        // `.enh.beLiterate`.
+        subject.enh.set.beLiterate.readVerb = 'readAsText';
+        subject.enh.beLiterate.writeTo = 'sessionStorage://ProgrammaticDeclarativeInSequence-{file.name}';
+        // fifteenth's set() broadcasts window.postMessage([usp]) once the write completes.
+        window.addEventListener('message', e => {
+            if(Array.isArray(e.data) && e.data.includes('sessionStorage://ProgrammaticDeclarativeInSequence-hello.txt')
+                && sessionStorage.getItem('ProgrammaticDeclarativeInSequence-hello.txt') === 'hello'){
+                target.setAttribute('mark', 'good');
+            }
+        });
+        // Signal the spec once hydrate has attached the change listener.
+        function whenResolved(){
+            if(subject.enh.beLiterate?.resolved === true){
+                target.setAttribute('ready', '');
+                return;
+            }
+            requestAnimationFrame(whenResolved);
+        }
+        whenResolved();
+    </script>
+</body>
+</html>
