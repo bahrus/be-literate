@@ -18,9 +18,13 @@
         Object.assign(beLiterate, {
             writeTo: 'sessionStorage://ProgrammaticImperative-{file.name}',
         });
+        // README "Gotcha": programmatic attachment stamps enh === 'beLiterate' (never '📖').
+        let loadEnh;
+        subject.addEventListener('load', e => { loadEnh = e.enh; });
         // fifteenth's set() broadcasts window.postMessage([usp]) once the write completes.
         window.addEventListener('message', e => {
             if(Array.isArray(e.data) && e.data.includes('sessionStorage://ProgrammaticImperative-hello.txt')
+                && loadEnh === 'beLiterate'
                 && sessionStorage.getItem('ProgrammaticImperative-hello.txt') === 'hello'){
                 target.setAttribute('mark', 'good');
             }

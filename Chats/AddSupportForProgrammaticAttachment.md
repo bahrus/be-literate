@@ -56,3 +56,25 @@ Each attaches to an attribute-less `<input type=file>` and writes the selected f
 - `AttributeWriteTo` -- regression coverage for the original be-hive / `📖` attribute path, since the hydrate trigger changed.
 
 Each fixture sets `ready` on `#target` once the enhancement reports `resolved` (hydrate has attached the `change` listener). The spec then calls `setInputFiles` with a `hello.txt` containing `hello`, and the fixture sets `mark=good` once fifteenth's `postMessage` confirms the write and `sessionStorage` holds `hello`. All 4 pass on chromium (`npx playwright test`).
+
+## Bruce's Response I
+
+Can you make sure all the latest instructions of the addendum at the top are in place?  
+
+
+### Response to Bruce's Response I
+
+The local `types` submodule had been 118 commits behind. The newer addendum adds steps 6 and 7.
+
+**Step 6 (document it in the README):** I rewrote the README section, now titled "Programmatic attachment (no attribute)". It stays after the attribute examples and follows the addendum's order:
+
+- a. An intro saying when to use each approach, plus the three advantages, made specific to be-literate: a JSON-in-an-emoji-attribute string versus plain `readVerb`/`writeTo` properties; `JSON.parse` of the attribute value; and no mount-observer. I confirmed that `def.js` → `assign-gingerly/object-extension.js`, `roundabout-lib` and `fifteenth` don't import mount-observer (`be-literate.js` references it only as a type import). The intro ends by noting that both approaches give the same enhancement and can be mixed.
+- b. Registration (`defBeLiterate` with the scoped-registry comment).
+- c. An attribute → property table (`readVerb`, `writeTo`), plus a note on the read-only results `fileContents` and `writtenTo`.
+- d. `enh.set` with an "equivalent to `<input 📖='...'>`" comment, and `enh.get()` with `Object.assign`.
+- e. Gotcha: when attached programmatically, the `load`/`progress` events carry `enh === 'beLiterate'`, never `'📖'`. This matters because Example 1 tells readers to filter on `enh`. `tests/ProgrammaticImperative.html` now asserts this before setting `mark=good`.
+- f. A link to `demo/Programmatic`.
+
+**Step 7 (accept elements/WeakRefs wherever an id is accepted):** This doesn't apply. None of be-literate's properties (`readVerb`, `writeTo`, `fileContents`, `writtenTo`) refers to another element. The only element it holds is `enhancedElement`, which `customData.weakRef` already holds weakly. So there's nothing to widen, and no `TargetElementGC` test is needed.
+
+Steps 1–5 were already in place (see above). All 4 Playwright tests pass after the `types` update.

@@ -125,33 +125,63 @@ For that we make use of the Uniform Storage Path (USL) protocol, via [`fifteenth
 
 
 
-## Programmatic Attachment
+## Programmatic attachment (no attribute)
 
-When rendering on the client via a framework or web component, you can skip the attribute (and its JSON stringifying/parsing) entirely. First register the config once, via `def.js`:
+The attribute syntax above shines for server-rendered HTML and progressive enhancement, where the markup alone says what the enhancement does.
+
+Most web development today, though, renders on the client, with a framework (Lit, React, Vue, Svelte, etc.) that already has a JavaScript reference to each `<input type=file>` it creates. There, attaching be-literate programmatically is the better fit:
+
+1. **A less clunky API.** Frameworks are awkward about setting arbitrary attributes, let alone emoji ones like `📖`. Instead of building the string `'{"readVerb": "readAsDataURL", "writeTo": "indexedDB://myDB/myFiles/{file.name}"}'` and stuffing it into an attribute, you set `readVerb` and `writeTo` as plain properties.
+2. **Less stringifying and parsing.** With the attribute, your code serializes those settings to a JSON string, and be-literate `JSON.parse`s it back apart. Programmatically, the values pass straight through.
+3. **Less overhead monitoring attributes.** The attribute approach relies on be-hive / mount-observer watching the DOM for `input[type=file]` elements that carry (or gain) the `be-literate` / `📖` attribute, and for changes to its value. `def.js` doesn't load mount-observer at all. It just registers the config, and be-literate is attached exactly when, and to exactly the elements, your code says.
+
+Either way, it's the **same enhancement**, with the same defaults (`readVerb` defaults to `readAsText`), the same `load` / `progress` events, and the same `writeTo` behavior. The two approaches can be mixed in one app: attributes for server-rendered islands, programmatic attachment inside client-rendered components.
+
+### Registration
+
+Register the config once, via `def.js`:
 
 ```JS
 import { defBeLiterate } from 'be-literate/def.js';
 const emc = await defBeLiterate(document.body); // or a shadow root's host, for a scoped registry
 ```
 
+### Attribute → property mapping
+
+Each key of the attribute's JSON value is a property of the same name:
+
+| Attribute | Property | Notes |
+|-----------|----------|-------|
+| `📖` / `be-literate` (no value) | (none) | Attaching is enough: set any property via `enh.set`, or call `enh.get(emc)`. |
+| `{"readVerb": "readAsDataURL"}` | `readVerb` | `'readAsText'` (default), `'readAsDataURL'`, `'readAsArrayBuffer'` or `'readAsBinaryString'`. |
+| `{"writeTo": "indexedDB://myDB/myFiles/{file.name}"}` | `writeTo` | A USL string. `{file.name}` (and other `{file.*}` placeholders) are substituted per file. |
+
+The results are on the instance too: `fileContents` (cleared once it has been written to `writeTo`) and `writtenTo` (the USLs written).
+
 ### Declarative -- via `enh.set`
 
 ```JS
-// only the first access needs to go through .set -- it triggers attachment.
+// equivalent to <input type=file 📖='{"readVerb": "readAsDataURL", "writeTo": "indexedDB://myDB/myFiles/{file.name}"}'>
 myFileInput.enh.set.beLiterate.readVerb = 'readAsDataURL';
 myFileInput.enh.beLiterate.writeTo = 'indexedDB://myDB/myFiles/{file.name}';
 ```
 
-This is order-independent -- properties can be set via `.set` before `defBeLiterate` has even been called.
+Only the first property needs to go through `.set`, since that access triggers attachment. This works before or after `defBeLiterate` has been called.
 
 ### Imperative -- via `enh.get()`
 
 ```JS
-const beLiterate = myFileInput.enh.get(emc);
-beLiterate.writeTo = 'indexedDB://myDB/myFiles/{file.name}';
+Object.assign(myFileInput.enh.get(emc), {
+    readVerb: 'readAsDataURL',
+    writeTo: 'indexedDB://myDB/myFiles/{file.name}',
+});
 ```
 
-See [demo/Programmatic/](demo/Programmatic/) for runnable examples.
+### Gotcha: the event's `enh` value
+
+When attached programmatically, the `load` and `progress` events carry `enh === 'beLiterate'` (the `enhKey` in `emc.json`), never `'📖'`, even if the `📖` attribute is used elsewhere in the app. If you filter events by `enh`, as suggested in [Example 1](#example-1), check for `'beLiterate'`.
+
+See [demo/Programmatic](demo/Programmatic/) for runnable examples.
 
 ## Viewing Demos Locally
 

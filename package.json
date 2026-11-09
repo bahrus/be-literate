@@ -37,15 +37,15 @@
     "update": "ncu -u && npm install"
   },
   "dependencies": {
-    "assign-gingerly": "0.0.97",
+    "assign-gingerly": "0.0.109",
     "be-hive": "0.1.18",
     "fifteenth": "0.0.8",
     "mount-observer": "0.1.53",
     "roundabout-lib": "0.0.38"
   },
   "devDependencies": {
-    "@playwright/test": "1.63.0",
-    "spa-ssi": "0.0.28"
+    "@playwright/test": "1.65.0",
+    "spa-ssi": "0.0.31"
   },
   "repository": {
     "type": "git",
